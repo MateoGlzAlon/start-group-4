@@ -25,6 +25,10 @@ We are building a tool that gives international students at HSG (University of S
 
 **In one sentence:** For HSG, we cut unnecessary bureaucracy with detailed step-by-step guides adapted to each student's profile. This beats government websites and admissions office emails because it frees HSG employees to spend their time on more important tasks.
 
+## Reference documents
+
+- [docs/context_1.md](docs/context_1.md): the rulebook for moving to St. Gallen, extracted from the official City of St. Gallen, Canton of St. Gallen and HSG pages. For each profile (EU/EFTA, UK, other countries, everyone) it lists what students must do, which documents they need, the deadline, the office and the exact source sentence. It ends with a link check and a list of what is still missing for a complete checklist. Use it as the source of truth for the rules the guide shows. Where it says "not in source", do not fill the gap from general knowledge.
+
 ## Everything runs in Docker
 
 - Every part of the system (frontend, backend, database and any other service) runs in a Docker container. The only things needed on the host are Docker with the Compose plugin, and `make`.
