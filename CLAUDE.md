@@ -16,6 +16,7 @@ We are building a tool that gives international students at HSG (University of S
 ## Value proposition
 
 | | |
+|---|---|
 | **Customer** | HSG |
 | **Problem we solve** | Unnecessary bureaucracy |
 | **Solution** | Detailed step-by-step guides adapted to each student's profile |
