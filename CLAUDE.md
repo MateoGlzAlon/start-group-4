@@ -4,11 +4,11 @@ We are building a tool that gives international students at HSG (University of S
 
 ## Problem definition
 
-**Who:** International students, both before and after they move to St. Gallen.
+**Who:** Students, both before and after they move to St. Gallen (newcomers).
 
 **Problem:**
 - Information is spread across many government websites.
-- It is in a language they do not understand.
+- It is in a language some of them do not understand.
 - It is not adapted to their profile.
 
 **Current situation:** Students cope with confusion, inefficiency and unnecessary work, which costs them time and nerves.
