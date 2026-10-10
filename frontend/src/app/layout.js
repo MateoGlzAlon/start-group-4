@@ -1,0 +1,40 @@
+import Link from "next/link";
+
+import "./globals.css";
+import styles from "./layout.module.css";
+
+export const metadata = {
+  title: "Arrive SG: your move to St.Gallen, step by step",
+  description:
+    "A step-by-step checklist for students moving to St.Gallen to study at HSG, based on the official City, Canton and HSG pages.",
+};
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <body>
+        <header className={styles.header}>
+          <div className={`wrap ${styles.headerInner}`}>
+            <Link href="/" className={styles.brand}>
+              <span className={styles.mark} aria-hidden="true" />
+              Arrive SG
+            </Link>
+            <span className={styles.badge}>Student prototype</span>
+          </div>
+        </header>
+
+        <main className="wrap main">{children}</main>
+
+        <footer className={styles.footer}>
+          <div className="wrap">
+            <p>
+              Arrive SG is a student prototype. It is not an official service of HSG, the City of St.Gallen or the
+              Canton of St.Gallen. Always check the linked official source before you act.
+            </p>
+            <p>Your answers and ticked-off steps are stored only in this browser.</p>
+          </div>
+        </footer>
+      </body>
+    </html>
+  );
+}

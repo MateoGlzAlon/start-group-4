@@ -1,0 +1,120 @@
+.top {
+  margin-bottom: var(--gap);
+}
+
+.profile {
+  font-family: var(--font-heading);
+  font-size: 1.125rem;
+  line-height: 1.5;
+}
+
+.change {
+  margin-left: 1rem;
+  vertical-align: 1px;
+}
+
+.progress {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--hsg-grey-300);
+}
+
+.progressText {
+  margin-bottom: 0.75rem;
+  font-family: var(--font-heading);
+  font-weight: 500;
+}
+
+/* Bars, not dots, like the HSG slider pagination: one bar per step */
+.bars {
+  display: flex;
+  gap: 4px;
+}
+
+.bar,
+.barOn {
+  flex: 0 1 40px;
+  height: 6px;
+  background: var(--hsg-grey-300);
+  transition: background-color var(--ease);
+}
+
+.barOn {
+  background: var(--hsg-green);
+}
+
+.phase {
+  margin-bottom: var(--gap);
+}
+
+.phaseTitle {
+  margin-bottom: 0.5rem;
+}
+
+.phaseIntro {
+  margin-bottom: 1.5rem;
+}
+
+.list {
+  list-style: none;
+  display: grid;
+  gap: var(--gridgap);
+  margin: 0;
+  padding: 0;
+}
+
+.list > li {
+  margin: 0;
+}
+
+.sources {
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--hsg-grey-300);
+}
+
+.sourceList {
+  list-style: none;
+  margin: 1.5rem 0 0;
+  padding: 0;
+}
+
+.sourceList li {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin: 0 0 0.75rem;
+}
+
+.tag {
+  flex: none;
+  padding: 3px 6px;
+  background: var(--hsg-green-dark);
+  color: var(--hsg-white);
+  font-family: var(--font-heading);
+  font-weight: 500;
+  font-size: 0.75rem;
+  line-height: 1;
+}
+
+.external {
+  margin-left: 0.25rem;
+  vertical-align: -2px;
+}
+
+.sourceMeta {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 0.875rem;
+  color: var(--hsg-grey-600);
+}
+
+@media (max-width: 599px) {
+  .profile {
+    font-size: 1rem;
+  }
+
+  .change {
+    display: flex;
+    margin: 0.5rem 0 0;
+  }
+}

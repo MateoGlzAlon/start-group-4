@@ -1,0 +1,52 @@
+.header {
+  background: var(--hsg-white);
+  border-bottom: 1px solid var(--hsg-grey-300);
+}
+
+.headerInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 72px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  font-family: var(--font-heading);
+  font-weight: 300;
+  font-size: 1.5rem;
+  color: var(--hsg-black);
+  transition: color var(--ease);
+}
+
+.brand:hover {
+  color: var(--hsg-green);
+  text-decoration: none;
+}
+
+.mark {
+  width: 14px;
+  height: 14px;
+  background: var(--hsg-green);
+}
+
+.badge {
+  font-family: var(--font-heading);
+  font-size: 0.875rem;
+  color: var(--hsg-grey-600);
+}
+
+.footer {
+  border-top: 1px solid var(--hsg-grey-300);
+  padding: 40px 0;
+  font-family: var(--font-heading);
+  font-size: 0.875rem;
+  color: var(--hsg-grey-600);
+}
+
+.footer p:last-child {
+  margin-bottom: 0;
+}

@@ -1,0 +1,24 @@
+# Every service of Arrive SG. Run it through the Makefile: `make provision`, `make deprovision`.
+name: arrive-sg
+
+services:
+  frontend:
+    build: ./frontend
+    image: arrive-sg-frontend
+    ports:
+      - "${APP_PORT:-8095}:80"
+    restart: unless-stopped
+
+  # Live-reload server for development: `make dev`.
+  frontend-dev:
+    profiles: [dev]
+    build:
+      context: ./frontend
+      target: deps
+    command: npm run dev -- --hostname 0.0.0.0
+    ports:
+      - "${DEV_PORT:-3000}:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
