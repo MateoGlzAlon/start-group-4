@@ -133,6 +133,10 @@ export const STEPS = [
         when: isEu,
         text: "Grade requirements for specific certificates (Abitur, Maturità, Bac, Matura): HSG only says it weighs subjects, hours and length of schooling",
       },
+      {
+        when: (p) => !isBachelor(p) && !isMaster(p),
+        text: "Application deadlines and admission rules for PhD and other programmes: the rulebooks cover only Bachelor's and Master's",
+      },
     ],
     links: [L.hsgDeadlines, { ...L.hsgRecognition, when: isMaster }],
     sources: [
@@ -737,13 +741,13 @@ export const STEPS = [
     deadline: "Within 14 days of arrival",
     office: RESIDENTS_OFFICE,
     todo: [
-      "Go to the counter with the documents below. You can also report the move online through eUmzugCH.",
-      "Pay the registration fee, in cash or by card.",
+      "Go to the counter in person with the documents below.",
+      "Pay the registration fee there, in cash or by card.",
       { when: plansToWork, text: "Planning to work? Register before you start the job." },
     ],
     documents: [
       "Rental agreement, or a confirmation from your accommodation provider",
-      "Foreign ID card and travel documents",
+      "Passport or national ID card, and the travel documents from your home country",
       "Valid health-insurance card, or your current basic insurance policy",
       "Family booklet, if you are married with minor children",
       { when: isUk, text: "The assurance of a residence permit (Zusicherung der Aufenthaltsbewilligung)" },
@@ -755,19 +759,11 @@ export const STEPS = [
         text: "Keeping your main residence elsewhere in Switzerland? Then register online as a weekly resident within 14 days of moving. You need your rental or sublease agreement or accommodation confirmation, your enrolment certificate, and a certificate of residence from your main commune (the original, sent by post).",
       },
       "Living outside the City of St.Gallen? Register with your municipality's population services (Bevölkerungsdienste) instead. Bring your ID, rental agreement and health-insurance card, and ask them what else you need.",
-      {
-        when: (p) => isEu(p) && fromAbroad(p),
-        text: "Arriving from abroad? The city does not say whether you can register through eUmzugCH. It does say that foreign nationals pay the registration fees at the Residents' Office.",
-      },
     ],
     missing: [
       { when: (p) => !isEu(p), text: "The amount of the registration fee" },
-      {
-        when: (p) => isEu(p) && fromAbroad(p),
-        text: "Whether EU/EFTA citizens arriving from abroad can register through eUmzugCH: the city sends them to the Migrationsamt's fact sheets instead",
-      },
+      "Whether foreign nationals can register through eUmzugCH. docs/context_1.md (row 8) says it is offered, but the city says foreign nationals pay the fees at the Residents' Office, and it sends foreign arrivals to the Migrationsamt's fact sheets (EU rulebook B4, B13). So the app shows eUmzugCH to Swiss students only",
     ],
-    links: [L.eumzug],
     places: [P.residentsOffice],
     sources: [
       { id: "S1", where: "Introduction", quote: "change of place of residence within 14 days" },
@@ -1034,8 +1030,9 @@ export const STEPS = [
     rows: [24],
     euRows: ["B7", "B10", "B11"],
     ukSteps: [11],
-    // Non-EU/EFTA exchange students give their biometrics in the registration step above.
-    when: (p) => isForeign(p) && (isDegree(p) || isEu(p)),
+    // Non-EU/EFTA exchange students give their biometrics in the registration step above. EU/EFTA degree students
+    // moving from another canton keep their permit (canton-change-eu), so they get no new card.
+    when: (p) => isForeign(p) && (isDegree(p) || isEu(p)) && !(isEu(p) && isDegree(p) && fromSwitzerland(p)),
     title: "Go to your ID appointment",
     summary:
       "Once your permit is approved, you get a written invitation. There your photo and signature are taken, and your fingerprints if required.",
@@ -1289,7 +1286,7 @@ export const STEPS = [
     notes: [
       {
         when: (p) => isEu(p) && isDegree(p),
-        text: "The sources differ on when and where to apply. The canton and the federal SEM say at the latest 2 weeks (14 days) before expiry. The city says about two months before, in person at the Residents' Office.",
+        text: "The sources differ on when and where to apply. The canton and the federal SEM say at the latest 2 weeks (14 days) before expiry. The city says about two months before (at the earliest three months before), in person at the Residents' Office.",
       },
     ],
     missing: [
@@ -1342,7 +1339,7 @@ export const STEPS = [
         text: "Moving to another canton? Apply for the change of canton before you move. With an L permit you have no right to it.",
       },
     ],
-    links: [L.eumzug],
+    places: [P.residentsOffice],
     sources: [
       { id: "S1", where: "Introduction", quote: "change of place of residence within 14 days" },
       {
@@ -1398,7 +1395,7 @@ export const STEPS = [
     ],
     documents: [
       "Departure notice from the tax office",
-      "Your original foreign ID card",
+      "Your original permit card (Ausländerausweis)",
       "The “Moving abroad” questionnaire",
       "A power of authority, if someone deregisters for you",
     ],
@@ -1866,7 +1863,7 @@ export const STEPS = [
       "Attend recruitment, then do your military or civil service in person.",
       {
         // The assessment year is the first year of the Bachelor's; the source gives no advice for other levels.
-        when: (p) => !isMaster(p),
+        when: isBachelor,
         text: "HSG recommends doing RS before you start your studies, or in the 4th semester (spring semester) after you pass the assessment year.",
       },
     ],
@@ -2063,9 +2060,17 @@ export const STEPS = [
     title: "Tell others your new address",
     summary: "After you move, other organisations need your new address too.",
     todo: [
-      "Tell these organisations: eUmzugCH, the city utilities (St.Galler Stadtwerke, SGSW), the driving licence office, and Swiss Post.",
+      {
+        when: isSwiss,
+        text: "Tell these organisations: eUmzugCH, the city utilities (St.Galler Stadtwerke, SGSW), the driving licence office, and Swiss Post.",
+      },
+      {
+        // eUmzugCH is shown to Swiss students only; see the `register` step.
+        when: isForeign,
+        text: "Tell these organisations: the city utilities (St.Galler Stadtwerke, SGSW), the driving licence office, and Swiss Post.",
+      },
     ],
-    links: [L.eumzug, L.sgsw, L.drivingLicence, L.post],
+    links: [{ ...L.eumzug, when: isSwiss }, L.sgsw, L.drivingLicence, L.post],
     sources: [{ id: "S1", quote: "Whenever you change your address, you must inform various other organisations:" }],
   },
   {

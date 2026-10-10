@@ -136,3 +136,11 @@ test("Swiss students get the shared steps for their level, without permit steps"
   assert.match(budget.fees.join(" "), /Swiss students: CHF 1,524\.50/);
   assert.equal(parseProfile(new URLSearchParams("nationality=ch&programme=exchange&residence=main&military=no")), null);
 });
+
+test("only Swiss students are pointed to eUmzugCH", () => {
+  // Foreign nationals register at the counter: they pay the fees there (EU rulebook B4, B13).
+  for (const profile of allProfiles().filter((p) => p.nationality !== "ch")) {
+    const shown = JSON.stringify(stepsFor(profile).map(({ sources, missing, ...rest }) => rest));
+    assert.ok(!/eUmzug/i.test(shown), `${JSON.stringify(profile)} is told about eUmzugCH`);
+  }
+});
