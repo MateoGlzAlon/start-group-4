@@ -10,9 +10,9 @@ import styles from "./StepCard.module.css";
 export default function StepCard({ step, number, done, open, onToggleOpen, onToggleDone }) {
   const detailsId = `step-${step.id}`;
   const classes = [styles.card, open && styles.open, done && styles.done].filter(Boolean).join(" ");
-  // Show the source with a quote first; fold the others away so the card stays short on a phone.
-  const primary = step.sources.find((source) => source.quote) ?? step.sources[0];
-  const more = step.sources.filter((source) => source !== primary);
+  // Link each source page once (quotes stay in the data, not on screen). Show the first page and fold the
+  // others away so the card stays short on a phone.
+  const [primary, ...more] = [...new Set(step.sources.map((source) => source.id))];
 
   return (
     <article id={`card-${step.id}`} className={classes}>
@@ -51,15 +51,15 @@ export default function StepCard({ step, number, done, open, onToggleOpen, onTog
         <List label="Good to know" items={step.notes} />
 
         <Section label="Official source">
-          <SourceQuote source={primary} />
+          <SourceLink id={primary} />
           {more.length > 0 && (
             <details className={styles.more}>
               <summary>
                 <East size={18} />
                 {more.length === 1 ? "1 more source" : `${more.length} more sources`}
               </summary>
-              {more.map((source, i) => (
-                <SourceQuote key={i} source={source} />
+              {more.map((id) => (
+                <SourceLink key={id} id={id} />
               ))}
             </details>
           )}
@@ -151,23 +151,16 @@ function Places({ places }) {
   );
 }
 
-function SourceQuote({ source }) {
-  const page = SOURCES[source.id];
+function SourceLink({ id }) {
+  const page = SOURCES[id];
   return (
-    <figure className={styles.source}>
-      {source.quote && (
-        <blockquote className={styles.quote} lang={source.lang ?? "en"}>
-          “{source.quote}”
-        </blockquote>
-      )}
-      {source.translation && <p className={styles.translation}>In English: “{source.translation}”</p>}
-      <figcaption className={styles.cite}>
-        <span className={styles.tag}>{source.id}</span>
+    <div className={styles.source}>
+      <p className={styles.cite}>
+        <span className={styles.tag}>{id}</span>
         <a href={page.url} target="_blank" rel="noreferrer">
           {page.publisher}: {page.title}
           <OpenInNew size={14} className={styles.external} />
         </a>
-        {source.where && `, ${source.where}`}
         {page.urlEn && (
           <>
             {" · "}
@@ -176,8 +169,7 @@ function SourceQuote({ source }) {
             </a>
           </>
         )}
-      </figcaption>
-      {page.notice && <p className={styles.notice}>{page.notice}</p>}
-    </figure>
+      </p>
+    </div>
   );
 }

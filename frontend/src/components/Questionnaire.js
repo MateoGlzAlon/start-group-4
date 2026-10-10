@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
-import { toQuery, visibleQuestions } from "@/data/profile";
+import { toQuery, visibleOptions, visibleQuestions } from "@/data/profile";
 import { loadProfileQuery } from "@/lib/storage";
 import { East, West } from "./Icons";
 import styles from "./Questionnaire.module.css";
@@ -20,7 +20,7 @@ const HOW_IT_WORKS = [
   },
   {
     title: "Check every rule",
-    text: "Each step names the official City, Canton or HSG page it comes from, with the exact sentence.",
+    text: "Each step links to the official City, Canton or HSG page it comes from.",
   },
 ];
 
@@ -83,7 +83,8 @@ export default function Questionnaire() {
     );
   }
 
-  const { key, question, options } = questions[index];
+  const { key, question } = questions[index];
+  const options = visibleOptions(questions[index], answers);
 
   return (
     <div className={styles.question}>

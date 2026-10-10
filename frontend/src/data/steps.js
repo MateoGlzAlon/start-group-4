@@ -8,7 +8,7 @@
 //   Never fill these gaps from general knowledge.
 // - `links` (forms, online services) and `places` (offices, opened in Google Maps) come from src/data/links.js.
 // List items (todo, documents, fees, notes, missing) are strings, or { text, when } to show them only to some profiles;
-// links and places may also carry a `when`.
+// links and places may also carry a `when`. `summary` and `deadline` may be functions of the profile.
 
 import {
   fromAbroad,
@@ -17,7 +17,9 @@ import {
   isDegree,
   isEu,
   isExchange,
+  isBachelor,
   isForeign,
+  isMaster,
   isNonEu,
   isOtherCountry,
   isSwiss,
@@ -62,28 +64,67 @@ export const STEPS = [
     ukSteps: [1],
     when: isDegree,
     title: "Apply to HSG and get admitted",
-    summary:
-      "Apply online in the application window. Bachelor applicants with a foreign school certificate also take HSG's selection procedure.",
-    deadline: "Bachelor: 1 October – 30 April. Master: 31 March or 30 April, depending on the programme",
+    summary: (p) =>
+      isMaster(p)
+        ? "Apply online by your programme's deadline: 31 March or 30 April."
+        : "Apply online in the application window. Bachelor applicants with a foreign school certificate also take HSG's selection procedure.",
+    deadline: (p) =>
+      isMaster(p)
+        ? "31 March or 30 April, depending on the programme"
+        : isBachelor(p)
+          ? "1 October – 30 April, for a start in autumn"
+          : "Bachelor: 1 October – 30 April. Master: 31 March or 30 April, depending on the programme",
     office: "HSG Admissions, admissions@unisg.ch, +41 71 224 39 31",
     todo: [
-      "Apply online. For a Bachelor's starting in autumn, the window is 1 October to 30 April. Master's programmes close on 31 March (MBI, MiMM, MGM, MACFin, MEcon) or 30 April (MBF, SIM, MOK, MiQE/F, MIA, MIL, MLaw, MLE, MCS).",
-      "Bachelor with a foreign school certificate? Then you can only be admitted through the HSG selection procedure: a 70-minute online aptitude test at home (quantitative problem-solving, with diagrams and tables) and a video interview of about 10 minutes.",
-      "The 2027 dates are 16 February (interview 18 February) and 8 June (interview 10 June). You can choose only one. To take part in February, send your full application by 10 January and register by 31 January. Later applicants take part in June.",
+      {
+        when: isMaster,
+        text: "Apply online by your programme's deadline. It is 31 March for MBI, MiMM, MGM, MACFin and MEcon, and 30 April for MBF, SIM, MOK, MiQE/F, MIA, MIL, MLaw, MLE and MCS.",
+      },
+      {
+        when: isBachelor,
+        text: "Apply online. For a Bachelor's starting in autumn, the window is 1 October to 30 April.",
+      },
+      {
+        when: (p) => !isMaster(p) && !isBachelor(p),
+        text: "Apply online. For a Bachelor's starting in autumn, the window is 1 October to 30 April. Master's programmes close on 31 March (MBI, MiMM, MGM, MACFin, MEcon) or 30 April (MBF, SIM, MOK, MiQE/F, MIA, MIL, MLaw, MLE, MCS).",
+      },
+      {
+        when: (p) => isForeign(p) && !isMaster(p),
+        text: "Bachelor with a foreign school certificate? Then you can only be admitted through the HSG selection procedure: a 70-minute online aptitude test at home (quantitative problem-solving, with diagrams and tables) and a video interview of about 10 minutes.",
+      },
+      {
+        when: (p) => isForeign(p) && !isMaster(p),
+        text: "The 2027 dates are 16 February (interview 18 February) and 8 June (interview 10 June). You can choose only one. To take part in February, send your full application by 10 January and register by 31 January. Later applicants take part in June.",
+      },
     ],
-    documents: ["For the selection test: a notebook or PC with camera and microphone. Phones and tablets are not allowed"],
+    documents: [
+      {
+        when: (p) => isForeign(p) && !isMaster(p),
+        text: "For the selection test: a notebook or PC with camera and microphone. Phones and tablets are not allowed",
+      },
+    ],
     fees: ["CHF 268 application fee, not refundable"],
     notes: [
-      "In the selection procedure only your results count, not your school grades. Places for foreign applicants are limited by law.",
-      "You don't need a language certificate. HSG recommends at least level C1.",
+      {
+        when: (p) => isForeign(p) && !isMaster(p),
+        text: "In the selection procedure only your results count, not your school grades. Places for foreign applicants are limited by law.",
+      },
+      {
+        when: (p) => !isMaster(p),
+        text: "Bachelor applicants don't need a language certificate. HSG recommends at least level C1.",
+      },
       "Lectures run from September to December and from February to May. Central exams are in January–February and June–July.",
       {
-        when: isEu,
+        when: (p) => isEu(p) && !isMaster(p),
         text: "Your school certificate must be essentially equivalent to the Swiss Matura. Check swissuniversities' country list for your certificate.",
       },
       {
-        when: isEu,
-        text: "From Liechtenstein, or holding a Liechtenstein Matura? Then you don't take the selection procedure. For a Master's with a Liechtenstein Bachelor you need a grade average of at least 5.00.",
+        when: (p) => isEu(p) && !isMaster(p),
+        text: "From Liechtenstein, or holding a Liechtenstein Matura? Then you don't take the selection procedure.",
+      },
+      {
+        when: (p) => isEu(p) && !isBachelor(p),
+        text: "Applying for a Master's with a Liechtenstein Bachelor? You need a grade average of at least 5.00.",
       },
       { when: isUk, text: "Your official admission decision (Zulassungsverfügung) comes only to your Compass inbox, not by post." },
     ],
@@ -93,6 +134,7 @@ export const STEPS = [
         text: "Grade requirements for specific certificates (Abitur, Maturità, Bac, Matura): HSG only says it weighs subjects, hours and length of schooling",
       },
     ],
+    links: [L.hsgDeadlines, { ...L.hsgRecognition, when: isMaster }],
     sources: [
       { id: "EU-S38", where: "Bachelor's degree starting with the Assessment Year; Master's programmes" },
       { id: "EU-S37", quote: "can only be admitted through the HSG selection procedure" },
@@ -125,7 +167,24 @@ export const STEPS = [
     title: "Plan your budget",
     summary: "HSG puts the total cost of a degree at CHF 25,000 to 30,000 a year. Foreign students pay higher tuition fees.",
     fees: [
-      "Tuition per semester for foreign students (autumn 2026): Bachelor CHF 3,343.50, Master CHF 3,557.50, PhD CHF 1,150.50, Joint Medical Master CHF 10,089.50",
+      { when: (p) => isForeign(p) && isBachelor(p), text: "Tuition for foreign students: CHF 3,343.50 per semester (autumn 2026)" },
+      {
+        when: (p) => isForeign(p) && isMaster(p),
+        text: "Tuition for foreign students: CHF 3,557.50 per semester, or CHF 10,089.50 for the Joint Medical Master (autumn 2026)",
+      },
+      {
+        when: (p) => isForeign(p) && !isBachelor(p) && !isMaster(p),
+        text: "Tuition per semester for foreign students (autumn 2026): Bachelor CHF 3,343.50, Master CHF 3,557.50, PhD CHF 1,150.50, Joint Medical Master CHF 10,089.50",
+      },
+      { when: (p) => isSwiss(p) && isBachelor(p), text: "Tuition for Swiss students: CHF 1,310.50 per semester (autumn 2026)" },
+      {
+        when: (p) => isSwiss(p) && isMaster(p),
+        text: "Tuition for Swiss students: CHF 1,524.50 per semester, or CHF 960.50 for the Joint Medical Master (autumn 2026)",
+      },
+      {
+        when: (p) => isSwiss(p) && !isBachelor(p) && !isMaster(p),
+        text: "Tuition per semester for Swiss students (autumn 2026): Bachelor CHF 1,310.50, Master CHF 1,524.50, PhD CHF 668.50, Joint Medical Master CHF 960.50",
+      },
     ],
     notes: [
       "HSG's monthly estimate for a Bachelor's student is about CHF 2,175: rent 795, food 440, transport 195, health 190, leisure 210, clothing 130, communication 45, and 170 for other costs.",
@@ -320,7 +379,7 @@ export const STEPS = [
     deadline: "Early. The source gives no fixed date",
     office: "Swiss embassy or consulate abroad. It forwards your application to the Migrationsamt St.Gallen",
     todo: [
-      "Apply at the Swiss embassy or consulate with the documents below.",
+      "Apply at the Swiss embassy or consulate with the documents.",
       "You may also have to confirm that you will leave Switzerland after your studies.",
     ],
     documents: [
@@ -486,7 +545,7 @@ export const STEPS = [
     deadline: "Within 3 months of arrival. Cover starts on your arrival date",
     office: "City of St.Gallen, Kontrollstelle für Krankenversicherung (for an exemption), Rathaus, kvg@stadt.sg.ch",
     todo: [
-      "Take out Swiss health insurance that starts on the day you arrive.",
+      "Look for Swiss health insurance that starts on the day you arrive.",
       "Or apply to be exempted, if you have a European Health Insurance Card (EHIC) or private cover that is equivalent. Use the city's official exemption form: your insurer confirms your cover on it. Other proof is not accepted.",
       {
         when: isEu,
@@ -672,7 +731,7 @@ export const STEPS = [
     chRows: ["A16", "I1", "I2"],
     euRows: ["B1", "B2", "B3", "B4", "B12", "B13"],
     ukSteps: [10],
-    when: isDegree,
+    when: (p) => isForeign(p) && isDegree(p),
     title: "Register at the Residents' Office",
     summary: "Register in person within 14 days of arriving. Late registration can be fined up to CHF 200.",
     deadline: "Within 14 days of arrival",
@@ -976,7 +1035,7 @@ export const STEPS = [
     euRows: ["B7", "B10", "B11"],
     ukSteps: [11],
     // Non-EU/EFTA exchange students give their biometrics in the registration step above.
-    when: (p) => isDegree(p) || isEu(p),
+    when: (p) => isForeign(p) && (isDegree(p) || isEu(p)),
     title: "Go to your ID appointment",
     summary:
       "Once your permit is approved, you get a written invitation. There your photo and signature are taken, and your fingerprints if required.",
@@ -1328,7 +1387,7 @@ export const STEPS = [
     rows: [28],
     euRows: ["F2"],
     ukSteps: [20],
-    when: isDegree,
+    when: (p) => isForeign(p) && isDegree(p),
     title: "Deregister when you move abroad",
     summary: "If you leave Switzerland after your studies, deregister in person. All adults in your household must come.",
     deadline: "Tax office: 1 month before you move",
@@ -1501,7 +1560,7 @@ export const STEPS = [
     phase: "ifneeded",
     optional: true,
     euRows: ["L9", "L10", "L11", "L12", "L13", "L14", "L15", "L16"],
-    when: isForeign,
+    when: everyone,
     title: "Everyday rules in St.Gallen",
     summary: "Rubbish, quiet hours, public transport and internet: what newcomers need to know.",
     notes: [
@@ -1805,7 +1864,11 @@ export const STEPS = [
     office: "HSG Militärische Verbindungsstelle (MilVrb) for advice",
     todo: [
       "Attend recruitment, then do your military or civil service in person.",
-      "HSG recommends doing RS before you start your studies, or in the 4th semester (spring semester) after you pass the assessment year.",
+      {
+        // The assessment year is the first year of the Bachelor's; the source gives no advice for other levels.
+        when: (p) => !isMaster(p),
+        text: "HSG recommends doing RS before you start your studies, or in the 4th semester (spring semester) after you pass the assessment year.",
+      },
     ],
     notes: [
       "Want to do civil service instead? Apply in writing on the form of the civil service administration (Zivildienstverwaltung). The earliest date is the orientation day, and there is a 4-week reflection period.",
@@ -2171,6 +2234,7 @@ export const STEPS = [
 ];
 
 const LIST_FIELDS = ["todo", "documents", "fees", "notes", "missing", "links", "places"];
+const PROFILE_FIELDS = ["summary", "deadline"];
 
 // Keeps the list items that apply to this profile; text items become plain strings.
 function pick(items = [], profile) {
@@ -2187,5 +2251,8 @@ export function stepsFor(profile) {
     .map((step) => ({
       ...step,
       ...Object.fromEntries(LIST_FIELDS.map((field) => [field, pick(step[field], profile)])),
+      ...Object.fromEntries(
+        PROFILE_FIELDS.filter((field) => typeof step[field] === "function").map((field) => [field, step[field](profile)]),
+      ),
     }));
 }

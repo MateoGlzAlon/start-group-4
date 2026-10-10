@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { allProfiles } from "../src/data/profile.js";
+import { allProfiles, parseProfile } from "../src/data/profile.js";
 import { SOURCES } from "../src/data/sources.js";
 import { PHASES, STEPS, stepsFor } from "../src/data/steps.js";
 
@@ -108,6 +108,31 @@ for (const profile of allProfiles()) {
       for (const field of ["todo", "documents", "fees", "notes", "missing"]) {
         assert.ok(step[field].every((item) => typeof item === "string"), `${step.id}.${field} has an unresolved item`);
       }
+      assert.equal(typeof step.summary, "string", `${step.id}.summary is not resolved`);
+      assert.ok(step.deadline === undefined || typeof step.deadline === "string", `${step.id}.deadline is not resolved`);
     }
   });
 }
+
+test("Master students get Master rules, not Bachelor ones", () => {
+  // What the student reads: everything except the citations (their quotes are not shown)
+  const text = (profile) => JSON.stringify(stepsFor(profile).map(({ sources, ...shown }) => shown));
+  const master = text({ nationality: "eu", programme: "master", from: "abroad", work: "no" });
+  const bachelor = text({ nationality: "eu", programme: "bachelor", from: "abroad", work: "no" });
+  assert.ok(master.includes("CHF 3,557.50") && !master.includes("CHF 3,343.50"), "Master tuition");
+  assert.ok(!master.includes("selection procedure"), "the selection procedure is for Bachelor applicants");
+  assert.ok(master.includes("31 March for MBI") && !bachelor.includes("31 March for MBI"), "Master deadlines");
+});
+
+test("Swiss students get the shared steps for their level, without permit steps", () => {
+  const ids = (profile) => stepsFor(profile).map((step) => step.id);
+  const swissMaster = { nationality: "ch", programme: "master", residence: "main", military: "no" };
+  const steps = ids(swissMaster);
+  for (const id of ["apply-hsg", "budget", "daily-life", "ch-register-main"]) assert.ok(steps.includes(id), `missing ${id}`);
+  for (const id of ["register", "id-appointment", "deregister-abroad", "health-insurance", "extend-permit"]) {
+    assert.ok(!steps.includes(id), `${id} is for international students`);
+  }
+  const budget = stepsFor(swissMaster).find((step) => step.id === "budget");
+  assert.match(budget.fees.join(" "), /Swiss students: CHF 1,524\.50/);
+  assert.equal(parseProfile(new URLSearchParams("nationality=ch&programme=exchange&residence=main&military=no")), null);
+});

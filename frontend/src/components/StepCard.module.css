@@ -208,21 +208,6 @@
   margin-bottom: 0;
 }
 
-.quote {
-  margin: 0 0 0.5rem;
-  padding-left: 1rem;
-  border-left: 2px solid var(--hsg-green);
-  font-style: italic;
-  hyphens: auto; /* long German words on narrow screens */
-  overflow-wrap: break-word;
-}
-
-.translation {
-  margin: 0 0 0.5rem;
-  padding-left: calc(1rem + 2px);
-  color: var(--hsg-grey-600);
-}
-
 .cite {
   font-family: var(--font-heading);
   font-size: 0.875rem;
@@ -277,15 +262,6 @@
 
 .more[open] summary {
   margin-bottom: 0.75rem;
-}
-
-.notice {
-  margin: 0.5rem 0 0;
-  padding: 10px 14px;
-  background: var(--hsg-white);
-  border-left: 2px solid var(--hsg-grey-600);
-  font-family: var(--font-heading);
-  font-size: 0.875rem;
 }
 
 .actions {

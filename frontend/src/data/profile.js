@@ -1,6 +1,7 @@
 // The questions a student answers, and helpers to read their answers (the "profile").
 // The profile lives in the guide's URL (?nationality=eu&programme=degree&…), so a checklist can be bookmarked or shared.
-// Swiss students get their own follow-up questions (`ask`), because their rules come from a separate rulebook.
+// Everyone answers nationality and programme. Swiss students then get their own follow-up questions (`ask`),
+// because their rules come from a separate rulebook. An option with `only` is offered only for some answers.
 
 const swiss = (answers) => answers.nationality === "ch";
 const international = (answers) => answers.nationality !== "ch";
@@ -20,6 +21,24 @@ export const QUESTIONS = [
         hint: "HSG handles exchange students from these countries like UK students.",
       },
       { value: "other", label: "Another country", short: "Another country" },
+    ],
+  },
+  {
+    key: "programme",
+    question: "What brings you to HSG?",
+    // "degree" (PhD or another full degree) keeps its old value so bookmarked checklists still open.
+    options: [
+      { value: "bachelor", label: "A Bachelor's programme", short: "Bachelor's programme" },
+      { value: "master", label: "A Master's programme", short: "Master's programme" },
+      { value: "degree", label: "A PhD or another degree programme", short: "PhD or other degree" },
+      {
+        value: "exchange",
+        label: "An exchange semester",
+        short: "Exchange semester",
+        hint: "For stays of more than 90 days.",
+        // The rulebooks only cover exchange students coming from abroad.
+        only: international,
+      },
     ],
   },
   {
@@ -56,20 +75,6 @@ export const QUESTIONS = [
     ],
   },
   {
-    key: "programme",
-    ask: international,
-    question: "What brings you to HSG?",
-    options: [
-      { value: "degree", label: "A degree programme", short: "Degree programme" },
-      {
-        value: "exchange",
-        label: "An exchange semester",
-        short: "Exchange semester",
-        hint: "For stays of more than 90 days.",
-      },
-    ],
-  },
-  {
     key: "from",
     ask: international,
     question: "Where are you moving from?",
@@ -89,8 +94,9 @@ export const QUESTIONS = [
   },
 ];
 
-// The questions to ask, given the answers so far.
+// The questions to ask, and the options to offer, given the answers so far.
 export const visibleQuestions = (answers) => QUESTIONS.filter((q) => !q.ask || q.ask(answers));
+export const visibleOptions = (q, answers) => q.options.filter((option) => !option.only || option.only(answers));
 
 // Reads a profile from URLSearchParams. Returns null unless every question it needs has a valid answer.
 export function parseProfile(params) {
@@ -98,7 +104,7 @@ export function parseProfile(params) {
   for (const q of QUESTIONS) {
     if (q.ask && !q.ask(profile)) continue;
     const value = params.get(q.key);
-    if (!q.options.some((option) => option.value === value)) return null;
+    if (!visibleOptions(q, profile).some((option) => option.value === value)) return null;
     profile[q.key] = value;
   }
   return profile;
@@ -118,7 +124,9 @@ export function allProfiles() {
   return QUESTIONS.reduce(
     (profiles, q) =>
       profiles.flatMap((profile) =>
-        q.ask && !q.ask(profile) ? [profile] : q.options.map((option) => ({ ...profile, [q.key]: option.value })),
+        q.ask && !q.ask(profile)
+          ? [profile]
+          : visibleOptions(q, profile).map((option) => ({ ...profile, [q.key]: option.value })),
       ),
     [{}],
   );
@@ -135,7 +143,9 @@ export const isNonEu = (p) => isForeign(p) && !isEu(p);
 export const isUk = (p) => p.nationality === "uk";
 export const isOtherCountry = (p) => p.nationality === "apac" || p.nationality === "other";
 export const inExchangeUkGroup = (p) => p.nationality === "uk" || p.nationality === "apac";
-export const isDegree = (p) => p.programme === "degree";
+export const isDegree = (p) => ["bachelor", "master", "degree"].includes(p.programme);
+export const isBachelor = (p) => p.programme === "bachelor";
+export const isMaster = (p) => p.programme === "master";
 export const isExchange = (p) => p.programme === "exchange";
 export const fromAbroad = (p) => p.from === "abroad";
 export const fromSwitzerland = (p) => p.from === "ch";

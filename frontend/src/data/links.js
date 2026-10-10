@@ -74,6 +74,11 @@ export const LINKS = {
     url: "https://zahlungsportal.unisg.ch/en/products/external-exchange-guest/incoming-guest-students/",
   },
   hsgMobility: { label: "Contact HSG Student Mobility", url: "https://www.unisg.ch/en/studying/exchange-programme/contact/" },
+  hsgDeadlines: { label: "HSG application deadlines", url: "https://www.unisg.ch/en/studying/admission/application-deadlines/" },
+  hsgRecognition: {
+    label: "HSG: recognition of degrees for Master's admission",
+    url: "https://www.unisg.ch/en/studying/admission/recognition-of-degrees/",
+  },
 
   // Military service
   milvrb: {
@@ -103,7 +108,7 @@ export const LINKS = {
 
 // Offices, with the address from their official page. Each opens in Google Maps.
 export const PLACES = {
-  residentsOffice: { name: "Residents' Office (Bevölkerungsdienste), Rathaus", address: "Poststrasse 28, St.Gallen" },
+  residentsOffice: { name: "Residents' Office (Bevölkerungsdienste), Rathaus", address: "Poststrasse 28, 9001 St.Gallen" },
   migrationsamt: { name: "Migrationsamt", address: "Oberer Graben 38, 9001 St.Gallen" },
   idOffice: { name: "Ausweisstelle (ID office)", address: "Oberer Graben 32, 9001 St.Gallen" },
   kreiskommando: { name: "Kreiskommando, Amt für Militär und Zivilschutz", address: "Burgstrasse 50, 9000 St.Gallen" },

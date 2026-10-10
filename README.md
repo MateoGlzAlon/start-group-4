@@ -1,6 +1,6 @@
 # Arrive SG
 
-A step-by-step checklist for students moving to St.Gallen to study at HSG. Students answer a few questions and get the steps that apply to them, in order. International students say whether they come for a degree or an exchange, where they move from, and whether they plan to work. Swiss students say where their main residence will be and whether they are liable for military service. Each step shows the deadline, the documents, the office and the exact sentence from the official City of St.Gallen, Canton of St.Gallen or HSG page it is based on.
+A step-by-step checklist for students moving to St.Gallen to study at HSG. Students answer a few questions and get the steps that apply to them, in order. Everyone says whether they come for a Bachelor's, a Master's, or a PhD or other degree (international students can also choose an exchange). International students then say where they move from and whether they plan to work; Swiss students say where their main residence will be and whether they are liable for military service. Each step shows the deadline, the documents, the office and a link to the official City of St.Gallen, Canton of St.Gallen or HSG page it is based on.
 
 It is a frontend-only prototype for Demo Day, built with Next.js and React. There is no backend: answers and ticked-off steps stay in the student's browser.
 
@@ -37,7 +37,7 @@ Every push to `main` builds the app and publishes it to GitHub Pages ([.github/w
 - [docs/rulebook-eu-efta-students-stgallen.md](docs/rulebook-eu-efta-students-stgallen.md): the rulebook for EU/EFTA students. Its rows for everyone (housing, everyday life, help) apply to all students.
 - [docs/Studying at HSG as a UK citizen — Step-by-step admin guide.md](<docs/Studying at HSG as a UK citizen — Step-by-step admin guide.md>): the step-by-step guide for UK students.
 - [docs/rulebook-swiss-students-stgallen.md](docs/rulebook-swiss-students-stgallen.md): the rulebook for Swiss students.
-- [frontend/src/data/steps.js](frontend/src/data/steps.js): the checklist steps, each with the rulebook rows it covers, its source (with the verbatim quote where the rulebook gives one) and an English translation of German quotes.
+- [frontend/src/data/steps.js](frontend/src/data/steps.js): the checklist steps, each with the rulebook rows it covers, its source (with the verbatim quote where the rulebook gives one, kept in the data for checking; the app shows only the link).
 - [frontend/src/data/sources.js](frontend/src/data/sources.js): the source pages (S1–S8 for international students, EU-S… for EU/EFTA students, UK-… for UK students, CH-S1 to CH-S9 for Swiss students), with links to their English versions where they exist.
 
 When a rule changes, update the quote and the step together. If a source doesn't say something, leave the gap open (it is recorded in the step's `missing` list, which the app does not show) instead of filling it.

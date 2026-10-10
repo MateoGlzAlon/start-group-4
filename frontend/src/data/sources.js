@@ -34,6 +34,7 @@ export const SOURCES = {
     title: "Exchange students: visa and residence permit for stays of more than 90 days",
     date: "January 2026",
     url: "https://www.unisg.ch/en/studying/exchange-programme/incoming-guest-students/",
+    // Note for the team, not shown in the app.
     notice:
       "The January 2026 PDF these rules come from is no longer online (checked 10.10.2026). The link opens HSG's page for incoming guest students, which now has a newer “Visa and Entry Fact Sheet” (August 2026). Check the details there.",
   },

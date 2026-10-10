@@ -39,7 +39,7 @@ We are building a tool that gives international students at HSG (University of S
 
 - **Static export.** `next.config.mjs` sets `output: "export"`, so `npm run build` writes plain files to `frontend/out/`, which any web server can host. Do not add API routes, server actions or anything else that needs a Node server at runtime.
 - **Pages:**
-  - `/` shows the intro, then one question per screen. Everyone answers nationality first. International students then answer programme, where they move from, and work. Swiss students answer main residence and military service instead.
+  - `/` shows the intro, then one question per screen. Everyone answers nationality, then programme (Bachelor's, Master's, PhD or other degree; exchange is offered to international students only, since no rulebook covers Swiss exchange students). International students then answer where they move from, and work. `isDegree` covers the three degree answers; steps that differ by level use `isBachelor` and `isMaster`. The value `degree` (PhD or other) is kept so old checklist links still open. Swiss students answer main residence and military service instead. Steps that aren't about permits or nationality (applying, budget, housing, everyday rules, …) are shared by everyone; tailor them with `when` items (for example Swiss vs foreign tuition) rather than writing a Swiss copy.
   - `/guide/?nationality=…&…` is the checklist, grouped into phases ("Before you arrive", "Your first 14 days", …).
   - The answers live in the URL. Ticked-off steps live in the browser's `localStorage` (see `src/lib/storage.js`).
 - **Code layout:** pages in `src/app/`, client components in `src/components/`, each with a CSS Module next to it. Design tokens and base styles are in `src/app/globals.css`. Do not add a CSS framework or UI library.
@@ -49,6 +49,7 @@ We are building a tool that gives international students at HSG (University of S
     - `when(profile)`: which profiles see the step;
     - the rows it covers: `rows` for docs/context_1.md (1–30), `chRows` for the Swiss rulebook (A1–C21), `euRows` for the EU/EFTA rulebook (A1–M13) and `ukSteps` for the numbered steps of the UK guide (1–20);
     - `sources`: each gives the place on the page (`where`), the exact `quote` where the rulebook quotes a sentence, or both. German quotes also get an English `translation`;
+      The app shows only a link to each source page, never the quotes or translations. They stay in the data so the team can check each rule.
     - `missing`: what the sources don't say. It is a record for the team and is **not shown** in the app; do not add a "Not in the official sources" panel back.
 
     The Swiss rulebook's "Everyone" rows also apply to international students (the CHF 200 fine for late registration, "Tell others your new address"). Its appendix row I11 adds the city's exemption form to the international health-insurance step.
@@ -64,7 +65,7 @@ We are building a tool that gives international students at HSG (University of S
     - CH-S1 and CH-S3 to CH-S9 are S1 and S3 to S9 of the Swiss rulebook. Its S2 is the same page as S1, so steps cite S1. CH-KV is the city page cited for row I11.
     - EU-S… are the EU/EFTA rulebook's sources, with its numbers. Pages already listed keep their ID: its S2 = S1, S3 = CH-S3, S4 = CH-KV, S6 = S2, S7 = S3, S10 = S6, S11 = S4, S49 = S7 and S51 = CH-S1. EU-SHSG is the Student Union page its row H7 links.
     - UK-… are the UK guide's pages that aren't listed elsewhere (`UK-MERKBLATT`, `UK-VISA`, `UK-FOPH`, `UK-SEMESTER`). Its other links point to S1, S2, S4–S8, EU-S12 and EU-S38.
-    - S4, the HSG exchange PDF from January 2026, was offline when checked on 10.10.2026. HSG now links a "Visa and Entry Fact Sheet" (August 2026), and the app shows this notice next to S4. The exchange steps follow docs/context_1.md until the rulebook is updated.
+    - S4, the HSG exchange PDF from January 2026, was offline when checked on 10.10.2026. HSG now links a "Visa and Entry Fact Sheet" (August 2026), This is recorded as a `notice` on S4 in `sources.js`, for the team only; the app does not show notices. The exchange steps follow docs/context_1.md until the rulebook is updated.
 - **Rules for steps:**
   - Take every rule from docs/context_1.md (international students), docs/rulebook-eu-efta-students-stgallen.md (EU/EFTA students, and its rows for everyone), the UK guide (UK students) or docs/rulebook-swiss-students-stgallen.md (Swiss students).
   - When the rulebook says "not in source", add the gap to the step's `missing` list. Do not fill it from general knowledge.
