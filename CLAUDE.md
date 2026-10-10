@@ -85,7 +85,7 @@ We are building a tool that gives international students at HSG (University of S
   - Light Gill Sans headings and Palatino body text.
   - HSG green only for actions, links and progress.
   - Each step is shown as an HSG event card: a grey card, a green block with the step number, and a green arrow square.
-  - Don't use the HSG logo or present the app as an official HSG page. The footer says it is a student prototype and not an official service.
+  - The header shows the HSG logo mark (`public/hsg_icon.webp`) next to "Arrive SG", added at the team's request. HSG's permission is needed before the app is shown publicly. Don't use the full HSG logo or wordmark, and don't present the app as an official HSG page. The footer says it is a student prototype and not an official service.
 - **Phone first.** Most students will use the app on a phone. Design and check every change at 390 px and 320 px wide first, then on desktop.
   - On phones, body text stays at 16 px and anything you tap is at least 48 px tall. This deliberately differs from docs/style.md, where the HSG site drops to 14 px.
   - Below 600 px, a collapsed step card shows only its deadline and title. The summary appears when the card is open.
@@ -93,7 +93,7 @@ We are building a tool that gives international students at HSG (University of S
   - Pad fixed and edge-to-edge elements for the iPhone safe areas (`env(safe-area-inset-*)`).
   - Put hover effects inside `@media (hover: hover)`, because on touch screens they stick after a tap. Give touch feedback with `:active` instead.
   - In CSS Modules, wrap global classes (`.btn`, `.meta`, `.btn-link`) in `:global()`. Never reuse a class name for two different things in one module.
-- **Deploy:** [.github/workflows/deploy-pages.yml](.github/workflows/deploy-pages.yml) publishes the app to GitHub Pages on every push to `main`. It builds with `BASE_PATH=/<repository name>`. Link between pages with `next/link` or `useRouter`, which add the base path. Never hard-code internal URLs in an `<a>`.
+- **Running it:** the app runs locally in Docker (`make provision`, http://localhost:3000). There is no hosted deployment. Link between pages with `next/link` or `useRouter`, not hard-coded `<a>` tags.
 
 ## Everything runs in Docker
 

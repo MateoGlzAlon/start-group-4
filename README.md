@@ -25,11 +25,7 @@ make test          # checks every step cites an official source
 
 Or without Docker (needs Node 20.9+): `cd frontend && npm install && npm run dev`, and `npm test`.
 
-## Deploy for the demo
-
-Every push to `main` builds the app and publishes it to GitHub Pages ([.github/workflows/deploy-pages.yml](.github/workflows/deploy-pages.yml)). One-time setup: in the repository settings, go to **Pages** and set **Source** to **GitHub Actions**. The app is then at `https://<user>.github.io/start-group-4/`.
-
-`npm run build` writes plain static files to `frontend/out/`, so the app also works on Netlify, Vercel or any web server.
+`npm run build` writes plain static files to `frontend/out/`; the Docker image serves them with nginx.
 
 ## Where the rules come from
 

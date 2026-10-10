@@ -1,4 +1,7 @@
+import Image from "next/image";
 import Link from "next/link";
+
+import logo from "../../public/hsg_icon.webp";
 
 import "./globals.css";
 import styles from "./layout.module.css";
@@ -24,7 +27,7 @@ export default function RootLayout({ children }) {
         <header className={styles.header}>
           <div className={`wrap ${styles.headerInner}`}>
             <Link href="/" className={styles.brand}>
-              <span className={styles.mark} aria-hidden="true" />
+              <Image src={logo} alt="" className={styles.logo} priority />
               Arrive SG
             </Link>
             <Link href="/profile/" className={`btn btn-outline ${styles.customise}`}>

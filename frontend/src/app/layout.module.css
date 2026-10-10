@@ -29,10 +29,11 @@
   }
 }
 
-.mark {
-  width: 14px;
-  height: 14px;
-  background: var(--hsg-green);
+/* HSG logo mark (public/hsg_icon.webp). The file has a white margin, so it is drawn a little larger. */
+.logo {
+  width: 40px;
+  height: 40px;
+  margin: -4px -4px -4px -6px;
 }
 
 /* HSG outline button, sized for the header (the extra class beats the global .btn sizes) */
@@ -63,9 +64,9 @@
     font-size: 1.25rem;
   }
 
-  .mark {
-    width: 12px;
-    height: 12px;
+  .logo {
+    width: 34px;
+    height: 34px;
   }
 
   .headerInner .customise {
