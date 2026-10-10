@@ -1,5 +1,5 @@
 .editor {
-  max-width: 640px;
+  width: 100%;
 }
 
 .heading {
@@ -109,8 +109,8 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 0.5rem 1.5rem;
-  margin: 0 calc(-1 * var(--gutter));
-  padding: 12px var(--gutter) calc(12px + env(safe-area-inset-bottom));
+  margin: 0;
+  padding: 12px 0 calc(12px + env(safe-area-inset-bottom));
   background: var(--hsg-white);
   border-top: 1px solid var(--hsg-grey-300);
 }
