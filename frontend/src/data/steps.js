@@ -1535,6 +1535,7 @@ export const STEPS = [
       "Passport or ID card",
       "Your permit card (Ausländerausweis), at PostFinance",
       "At other banks: a residence confirmation, and possibly your employment contract",
+      "A UBS account can be opened without the residence permit in the HSG campus"
     ],
     sources: [
       {

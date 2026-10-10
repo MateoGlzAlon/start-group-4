@@ -87,7 +87,7 @@ We are building a tool that gives international students at HSG (University of S
 - **Phone first.** Most students will use the app on a phone. Design and check every change at 390 px and 320 px wide first, then on desktop.
   - On phones, body text stays at 16 px and anything you tap is at least 48 px tall. This deliberately differs from docs/style.md, where the HSG site drops to 14 px.
   - Below 600 px, a collapsed step card shows only its deadline and title. The summary appears when the card is open.
-  - Below 840 px, "Mark as done" is in the dock instead of the card. The dock is a bar fixed to the bottom of the screen, shown only while the open step is on screen. Opening a step scrolls it to the top of the screen.
+  - Below 840 px, "Mark as done" is in the dock instead of the card. The dock is a bar fixed to the bottom of the screen, shown only while the open step is on screen. Opening a step scrolls it to the top of the screen. All steps start closed when the checklist loads. Marking a step done closes it and does not open the next one; the student chooses what to open.
   - Pad fixed and edge-to-edge elements for the iPhone safe areas (`env(safe-area-inset-*)`).
   - Put hover effects inside `@media (hover: hover)`, because on touch screens they stick after a tap. Give touch feedback with `:active` instead.
   - In CSS Modules, wrap global classes (`.btn`, `.meta`, `.btn-link`) in `:global()`. Never reuse a class name for two different things in one module.

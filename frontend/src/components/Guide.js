@@ -12,7 +12,6 @@ import { Check, OpenInNew } from "./Icons";
 import StepCard from "./StepCard";
 import styles from "./Guide.module.css";
 
-const firstOpenStep = (steps, done) => steps.find((step) => !step.optional && !done.has(step.id));
 
 export default function Guide() {
   const params = useSearchParams();
@@ -26,14 +25,13 @@ export default function Guide() {
   const [dockVisible, setDockVisible] = useState(false);
   const scrollToOpen = useRef(false); // set when the student opens a step, not when the page loads
 
-  // Remember this checklist, restore ticked-off steps and open the first step still to do.
+  // Remember this checklist and restore ticked-off steps. Every step starts closed.
   useEffect(() => {
     if (!profile) return;
     saveProfileQuery(toQuery(profile));
-    const saved = loadDone();
-    setDone(saved);
-    setOpenId(firstOpenStep(steps, saved)?.id ?? null);
-  }, [profile, steps]);
+    setDone(loadDone());
+    setOpenId(null);
+  }, [profile]);
 
   // Opening a step closes the one above it, which moves everything up. Bring the opened step to the top
   // of the screen when it is no longer near the top, so the student does not lose their place.
@@ -81,10 +79,16 @@ export default function Guide() {
       next.delete(id);
     } else {
       next.add(id);
-      // Step by step: close this one and open the next step still to do.
-      const after = todo.slice(todo.findIndex((step) => step.id === id) + 1);
-      scrollToOpen.current = true;
-      setOpenId(firstOpenStep(after, next)?.id ?? null);
+      // Close the finished step; the student picks the next one themselves.
+      setOpenId(null);
+      // Closing a long step moves the page up. If its header ends up above the screen, bring it back.
+      requestAnimationFrame(() => {
+        const card = document.getElementById(`card-${id}`);
+        if (card && card.getBoundingClientRect().top < 0) {
+          const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+          card.scrollIntoView({ block: "start", behavior: reduce ? "auto" : "smooth" });
+        }
+      });
     }
     setDone(next);
     saveDone(next);
