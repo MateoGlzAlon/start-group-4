@@ -81,6 +81,18 @@ test("every numbered step of the UK guide is covered by a step", () => {
   assert.deepEqual([...covered].filter((n) => !UK_STEPS.includes(n)), [], "a step names a step that does not exist");
 });
 
+test("links and offices are complete", () => {
+  for (const step of STEPS) {
+    for (const link of step.links ?? []) {
+      assert.ok(link.label, `${step.id}: a link has no label`);
+      assert.match(link.url, /^(https:\/\/|mailto:)/, `${step.id}: ${link.label} is not an https or mailto link`);
+    }
+    for (const place of step.places ?? []) {
+      assert.ok(place.name && place.address, `${step.id}: an office needs a name and an address`);
+    }
+  }
+});
+
 test("every source is used by a step", () => {
   const used = new Set(STEPS.flatMap((step) => step.sources.map((source) => source.id)));
   assert.deepEqual(Object.keys(SOURCES).filter((id) => !used.has(id)), []);

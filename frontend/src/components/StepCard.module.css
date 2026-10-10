@@ -149,6 +149,57 @@
   padding-left: 0;
 }
 
+/* Forms, links and map pins: one tap target per line */
+.section .links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.links li {
+  margin: 0;
+}
+
+.links a {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625rem;
+  min-height: 44px;
+  padding: 10px 0;
+  font-family: var(--font-heading);
+  font-weight: 500;
+  line-height: 1.4;
+  border-top: 1px solid var(--hsg-grey-300);
+}
+
+.links li:last-child a {
+  border-bottom: 1px solid var(--hsg-grey-300);
+}
+
+.links a:active {
+  background: var(--hsg-white);
+}
+
+.linkIcon {
+  flex: none;
+  margin-top: 1px;
+}
+
+.placeName {
+  display: block;
+}
+
+.placeAddress {
+  display: block;
+  font-weight: 400;
+  font-size: 0.875rem;
+  color: var(--hsg-grey-600);
+}
+
+.section p + .links {
+  margin-top: 0.75rem;
+}
+
 .source {
   margin: 0 0 1rem;
 }

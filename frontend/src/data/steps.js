@@ -6,7 +6,9 @@
 //   where the rulebook gives one, and an English translation of German quotes (`lang: "de"`);
 // - `missing` records what the official sources do not say, for the team; the app does not show it.
 //   Never fill these gaps from general knowledge.
-// List items (todo, documents, fees, notes, missing) are strings, or { text, when } to show them only to some profiles.
+// - `links` (forms, online services) and `places` (offices, opened in Google Maps) come from src/data/links.js.
+// List items (todo, documents, fees, notes, missing) are strings, or { text, when } to show them only to some profiles;
+// links and places may also carry a `when`.
 
 import {
   fromAbroad,
@@ -25,6 +27,7 @@ import {
   plansToWork,
   weeklyResident,
 } from "./profile.js";
+import { LINKS as L, PLACES as P } from "./links.js";
 
 export const PHASES = [
   { id: "before", title: "Before you arrive", intro: "Start these before you travel to St.Gallen." },
@@ -245,6 +248,8 @@ export const STEPS = [
       { when: isExchange, text: "How this works for exchange students depends on your nationality. See the next step." },
     ],
     missing: ["Which documents the permit application needs", "How long it takes, and the earliest date you can apply"],
+    links: [L.migrationPage, { ...L.nonEuStudentSheet, when: (p) => isDegree(p) && isOtherCountry(p) }],
+    places: [P.migrationsamt],
     sources: [
       {
         id: "S7",
@@ -288,6 +293,8 @@ export const STEPS = [
       "Which proof of funds applies: the canton asks for CHF 2,000 a month, HSG's visa guidance for CHF 24,000",
       "Whether English certificates are accepted without a translation",
     ],
+    links: [L.formA1NonEu, L.migrationOnline, L.nonEuStudentSheet],
+    places: [P.migrationsamt],
     sources: [
       {
         id: "S7",
@@ -326,6 +333,7 @@ export const STEPS = [
       "Which nationalities need a visa (HSG links to a list from the State Secretariat for Migration, which is not in our sources)",
       "The document list and deadline for the permit application of non-EU/EFTA degree students",
     ],
+    links: [L.nonEuStudentSheet],
     sources: [
       {
         id: "S6",
@@ -349,6 +357,7 @@ export const STEPS = [
       "Pay HSG back online, by credit card only.",
     ],
     fees: ["CHF 96. You owe it even if your exchange is cancelled"],
+    links: [L.hsgPayment, L.hsgMobility],
     sources: [{ id: "S4", where: "§1, table row 2 and footnote" }],
   },
   {
@@ -368,6 +377,7 @@ export const STEPS = [
     documents: ["HSG acceptance letter (first route)", "Visa authorisation document (second route)"],
     fees: ["CHF 96 to HSG (second route)"],
     missing: ["The list of the 22 nationalities. It is in HSG's exchange guide, not in our rulebook"],
+    links: [L.hsgPayment, L.hsgMobility],
     sources: [{ id: "S4", where: "§1, table rows 3–4 and footnote" }],
   },
   {
@@ -525,6 +535,8 @@ export const STEPS = [
       { when: (p) => !isEu(p) && !isUk(p), text: "The deadline for the exemption" },
       { when: isEu, text: "Whether you need separate accident cover with an EHIC" },
     ],
+    links: [{ ...L.healthExemptionForm, when: isDegree }, { ...L.hsgExemptionForm, when: isExchange }],
+    places: [P.residentsOffice],
     sources: [
       { id: "S6", where: "“Krankenversicherung”, paragraphs 1–2" },
       {
@@ -647,6 +659,8 @@ export const STEPS = [
       "Confirmation about social aid from your last commune",
       "Extract from the debt-collection register (Betreibungsregisterauszug) of your last commune",
     ],
+    links: [L.formA1NonEu, L.migrationOnline],
+    places: [P.migrationsamt],
     sources: [{ id: "S8", where: "§2.3" }],
   },
 
@@ -694,6 +708,8 @@ export const STEPS = [
         text: "Whether EU/EFTA citizens arriving from abroad can register through eUmzugCH: the city sends them to the Migrationsamt's fact sheets instead",
       },
     ],
+    links: [L.eumzug],
+    places: [P.residentsOffice],
     sources: [
       { id: "S1", where: "Introduction", quote: "change of place of residence within 14 days" },
       { id: "S1", where: "“Moving within and to St.Gallen”, document list and last sentence" },
@@ -753,6 +769,8 @@ export const STEPS = [
       "Staying for many years, for example for a PhD? Citizens of the EU-15 states and EFTA can get a settlement permit (C) after five years, citizens of the other EU states after ten. But stays for study generally do not count toward these years.",
     ],
     missing: ["Who may translate your documents, and by when"],
+    links: [L.formA1Eu, L.migrationOnline],
+    places: [P.residentsOffice],
     sources: [
       {
         id: "S2",
@@ -808,6 +826,7 @@ export const STEPS = [
     deadline: "Within 14 days",
     office: "Residents' Office (Einwohnerkontrolle)",
     documents: ["Your foreigner ID card (permit card)"],
+    places: [P.residentsOffice],
     sources: [
       {
         id: "S8",
@@ -841,6 +860,8 @@ export const STEPS = [
       "HSG's CHF 71 is more than the federal maximum of CHF 65 for a permit card (as of 10.2020). The sources don't explain the difference, so check the amount at the Residents' Office.",
     ],
     missing: ["Which permit fee is right: HSG says CHF 71, the federal maximum is CHF 65"],
+    links: [L.formR],
+    places: [P.residentsOffice],
     sources: [
       {
         id: "S4",
@@ -905,6 +926,8 @@ export const STEPS = [
         text: "Whether UK exchange students pay CHF 25 once (docs/context_1.md, row 14) or twice (UK guide: at the Residents' Office and for the biometrics)",
       },
     ],
+    links: [L.formR],
+    places: [P.residentsOffice],
     sources: [
       {
         id: "S4",
@@ -934,6 +957,8 @@ export const STEPS = [
     documents: ["Passport or ID card", "Form R"],
     fees: ["CHF 122 for the permit", "CHF 25 processing fee, paid at the biometrics appointment"],
     missing: ["Whether CHF 122 is right: the same HSG guide lists CHF 123 for UK citizens"],
+    links: [L.formR],
+    places: [P.residentsOffice],
     sources: [
       {
         id: "S4",
@@ -974,6 +999,8 @@ export const STEPS = [
       { when: isUk, text: "The permit card then comes by post to your St.Gallen address." },
     ],
     missing: [{ when: isEu, text: "How long it takes until the card arrives" }],
+    links: [L.idAppointment],
+    places: [P.idOffice],
     sources: [
       { id: "S2", where: "“Ausländerausweis”" },
       { id: "S7", where: "p. 3" },
@@ -1102,6 +1129,8 @@ export const STEPS = [
       "Looking for a job? Use HSG's job portal, my.hsgcareer.ch.",
     ],
     missing: ["Deadlines for reporting your job or applying"],
+    links: [L.formA1Eu],
+    places: [P.migrationsamt],
     sources: [
       { id: "S3", where: "§5" },
       { id: "S6", where: "FAQ “Darf ich während meines Studiums arbeiten?”" },
@@ -1210,6 +1239,8 @@ export const STEPS = [
         text: "When and where to apply: 2 weeks before expiry at the Migrationsamt (canton, SEM), or about two months before at the Residents' Office (city). The city's two months may be when the forms are sent",
       },
     ],
+    links: [L.migrationOnline],
+    places: [P.migrationsamt],
     sources: [
       {
         id: "S7",
@@ -1252,6 +1283,7 @@ export const STEPS = [
         text: "Moving to another canton? Apply for the change of canton before you move. With an L permit you have no right to it.",
       },
     ],
+    links: [L.eumzug],
     sources: [
       { id: "S1", where: "Introduction", quote: "change of place of residence within 14 days" },
       {
@@ -1282,6 +1314,8 @@ export const STEPS = [
     office: "Residents' Office, Rathaus",
     todo: ["Deregister at the Residents' Office with the documents below.", "Upload the stamped Form D."],
     documents: ["Form D", "Your L permit"],
+    links: [L.formD],
+    places: [P.residentsOffice],
     sources: [
       { id: "S4", where: "“Before your departure”" },
       { id: "S5", where: "Form text", quote: "you must deregister at the Residents' Office" },
@@ -1309,6 +1343,8 @@ export const STEPS = [
       "The “Moving abroad” questionnaire",
       "A power of authority, if someone deregisters for you",
     ],
+    links: [L.movingAbroadQuestionnaire, L.powerOfAuthority],
+    places: [P.residentsOffice],
     sources: [
       { id: "S1", where: "“Moving abroad”" },
       { id: "S1", quote: "you can only deregister in person at the counter of the Resident's Office" },
@@ -1332,6 +1368,7 @@ export const STEPS = [
       { when: isUk, text: "Or hand the report in at the Migrationsamt's counter. Either way, ask for a duplicate card." },
     ],
     documents: ["The police loss report"],
+    places: [P.migrationsamt],
     sources: [{ id: "S2", where: "“Ausländerausweis verloren oder gestohlen?”" }],
   },
   {
@@ -1546,6 +1583,7 @@ export const STEPS = [
       { when: isNonEu, text: "Licences from countries that are not on the canton's list need a control drive." },
     ],
     missing: [{ when: isNonEu, text: "Which countries are on the canton's list" }],
+    links: [L.drivingLicence],
     sources: [
       {
         id: "EU-S23",
@@ -1713,6 +1751,7 @@ export const STEPS = [
       "Compare premiums at priminfo.admin.ch: there are over 50 insurers. A higher deductible (franchise) or a family-doctor model lowers your premium. Basic insurance does not cover dental care.",
     ],
     missing: ["Whether you have to change anything with your insurer when you move, for example your premium region"],
+    links: [L.sva],
     sources: [
       {
         id: "CH-S3",
@@ -1773,6 +1812,8 @@ export const STEPS = [
       "Assigned to civil protection? It starts in the year you turn 20.",
       "You have another nationality as well? The duty applies anyway, with exceptions under treaties with Germany, France, Italy and Austria.",
     ],
+    links: [L.milvrb],
+    places: [P.milvrb],
     sources: [
       {
         id: "CH-S7",
@@ -1823,6 +1864,8 @@ export const STEPS = [
       "Registering online? Have ready your AHV number (on your AHV-IV card), your health insurance card, your rental agreement, and a credit card (MasterCard, VISA or PostFinance Card) for any fees.",
     ],
     missing: ["The registration fee"],
+    links: [L.eumzug],
+    places: [P.residentsOffice],
     sources: [
       {
         id: "CH-S1",
@@ -1875,6 +1918,8 @@ export const STEPS = [
       "The amount of the fee (the city refers to its fee schedule, SRS 416.3)",
       "Which students must move their main residence to St.Gallen, and which may stay weekly residents",
     ],
+    links: [L.weeklyResidentForm],
+    places: [P.residentsOffice],
     sources: [
       {
         id: "CH-S1",
@@ -1925,6 +1970,7 @@ export const STEPS = [
     missing: [
       "Which of the two is right. Ask the Kreiskommando: kreiskommando@sg.ch, +41 58 229 71 71",
     ],
+    links: [L.kreiskommando, L.kreiskommandoMail],
     sources: [
       {
         id: "CH-S4",
@@ -1956,6 +2002,7 @@ export const STEPS = [
     todo: [
       "Tell these organisations: eUmzugCH, the city utilities (St.Galler Stadtwerke, SGSW), the driving licence office, and Swiss Post.",
     ],
+    links: [L.eumzug, L.sgsw, L.drivingLicence, L.post],
     sources: [{ id: "S1", quote: "Whenever you change your address, you must inform various other organisations:" }],
   },
   {
@@ -1973,6 +2020,8 @@ export const STEPS = [
       "Until the written decision arrives, you still have to report for duty.",
     ],
     documents: ["Proof of your reasons", "At least one alternative date"],
+    links: [L.dienstmanager, L.postponementForm, L.milvrb],
+    places: [P.milvrb],
     sources: [
       {
         id: "CH-S8",
@@ -2022,6 +2071,7 @@ export const STEPS = [
       "How students with little or no income are assessed, beyond the CHF 400 minimum",
       "When the invoice arrives",
     ],
+    links: [L.taxExplained, L.taxRefund],
     sources: [
       {
         id: "CH-S6",
@@ -2070,6 +2120,7 @@ export const STEPS = [
       { when: weeklyResident, text: "E-mail bd@stadt.sg.ch with your personal details and the exact date of your move." },
       { when: weeklyResident, text: "Moving within the city? Attach your new rental contract as a PDF." },
     ],
+    links: [{ ...L.eumzug, when: mainResidence }, { ...L.bdMail, when: weeklyResident }],
     sources: [
       {
         id: "CH-S1",
@@ -2099,6 +2150,8 @@ export const STEPS = [
       "Away from where you live for more than 2 months, without moving? Make sure your military mail is forwarded, or that someone can file postponement requests for you.",
       "Abroad for more than 12 months in a row, for example on a long exchange? Apply to the Kreiskommando for leave abroad (Auslandurlaub) as early as possible.",
     ],
+    links: [L.leaveAbroadForm, L.kreiskommando, L.kreiskommandoMail],
+    places: [P.kreiskommando],
     sources: [
       { id: "CH-S4", where: "Table of reporting duties: Berufsänderung, “innerhalb von 14 Tagen”" },
       {
@@ -2117,11 +2170,13 @@ export const STEPS = [
   },
 ];
 
-const LIST_FIELDS = ["todo", "documents", "fees", "notes", "missing"];
+const LIST_FIELDS = ["todo", "documents", "fees", "notes", "missing", "links", "places"];
 
-// Keeps the list items that apply to this profile and turns them into plain strings.
+// Keeps the list items that apply to this profile; text items become plain strings.
 function pick(items = [], profile) {
-  return items.filter((item) => typeof item === "string" || item.when(profile)).map((item) => item.text ?? item);
+  return items
+    .filter((item) => typeof item === "string" || !item.when || item.when(profile))
+    .map((item) => item.text ?? item);
 }
 
 // The steps that apply to a profile, in checklist order, with their lists filtered for it.

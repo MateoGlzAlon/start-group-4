@@ -34,8 +34,10 @@ Every push to `main` builds the app and publishes it to GitHub Pages ([.github/w
 ## Where the rules come from
 
 - [docs/context_1.md](docs/context_1.md): the rulebook for international students, extracted from the official pages.
+- [docs/rulebook-eu-efta-students-stgallen.md](docs/rulebook-eu-efta-students-stgallen.md): the rulebook for EU/EFTA students. Its rows for everyone (housing, everyday life, help) apply to all students.
+- [docs/Studying at HSG as a UK citizen — Step-by-step admin guide.md](<docs/Studying at HSG as a UK citizen — Step-by-step admin guide.md>): the step-by-step guide for UK students.
 - [docs/rulebook-swiss-students-stgallen.md](docs/rulebook-swiss-students-stgallen.md): the rulebook for Swiss students.
 - [frontend/src/data/steps.js](frontend/src/data/steps.js): the checklist steps, each with the rulebook rows it covers, its source (with the verbatim quote where the rulebook gives one) and an English translation of German quotes.
-- [frontend/src/data/sources.js](frontend/src/data/sources.js): the source pages (S1–S8 for international students, CH-S1 to CH-S9 for Swiss students), with links to their English versions where they exist.
+- [frontend/src/data/sources.js](frontend/src/data/sources.js): the source pages (S1–S8 for international students, EU-S… for EU/EFTA students, UK-… for UK students, CH-S1 to CH-S9 for Swiss students), with links to their English versions where they exist.
 
 When a rule changes, update the quote and the step together. If a source doesn't say something, leave the gap open (it is recorded in the step's `missing` list, which the app does not show) instead of filling it.

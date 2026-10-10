@@ -1,5 +1,7 @@
+import { mapsUrl } from "@/data/links";
 import { SOURCES } from "@/data/sources";
-import { Check, East, Info, OpenInNew } from "./Icons";
+import { Check, Description, East, Info, Mail, OpenInNew, Place } from "./Icons";
+import Linkify from "./Linkify";
 import styles from "./StepCard.module.css";
 
 // One step of the checklist, built on the event card of docs/style.md: a grey card with a green
@@ -34,10 +36,16 @@ export default function StepCard({ step, number, done, open, onToggleOpen, onTog
       <div id={detailsId} className={styles.details} hidden={!open}>
         <List label="What to do" items={step.todo} ordered />
         <List label="What to bring" items={step.documents} />
+        <Links links={step.links} />
         <List label="Cost" items={step.fees} />
-        {step.office && (
+        {(step.office || step.places.length > 0) && (
           <Section label="Where">
-            <p>{step.office}</p>
+            {step.office && (
+              <p>
+                <Linkify text={step.office} />
+              </p>
+            )}
+            <Places places={step.places} />
           </Section>
         )}
         <List label="Good to know" items={step.notes} />
@@ -91,10 +99,55 @@ function List({ label, items, ordered = false }) {
     <Section label={label}>
       <Tag className={Tag === "ul" && items.length === 1 ? styles.single : undefined}>
         {items.map((item) => (
-          <li key={item}>{item}</li>
+          <li key={item}>
+            <Linkify text={item} />
+          </li>
         ))}
       </Tag>
     </Section>
+  );
+}
+
+// Forms and online services, as large tap targets
+function Links({ links }) {
+  if (links.length === 0) return null;
+  return (
+    <Section label="Forms and links">
+      <ul className={styles.links}>
+        {links.map(({ label, url }) => {
+          const mail = url.startsWith("mailto:");
+          const Icon = mail ? Mail : /\.pdf$/i.test(url) ? Description : OpenInNew;
+          return (
+            <li key={url}>
+              <a href={url} {...(mail ? {} : { target: "_blank", rel: "noreferrer" })}>
+                <Icon size={20} className={styles.linkIcon} />
+                <span>{label}</span>
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+    </Section>
+  );
+}
+
+// Office addresses, each opening Google Maps
+function Places({ places }) {
+  if (places.length === 0) return null;
+  return (
+    <ul className={styles.links}>
+      {places.map((place) => (
+        <li key={place.address}>
+          <a href={mapsUrl(place)} target="_blank" rel="noreferrer">
+            <Place size={20} className={styles.linkIcon} />
+            <span>
+              <span className={styles.placeName}>{place.name}</span>
+              <span className={styles.placeAddress}>{place.address} · Open in Google Maps</span>
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
   );
 }
 
