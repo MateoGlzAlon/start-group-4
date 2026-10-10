@@ -28,6 +28,7 @@ We are building a tool that gives international students at HSG (University of S
 ## Reference documents
 
 - [docs/context_1.md](docs/context_1.md): the rulebook for moving to St. Gallen, extracted from the official City of St. Gallen, Canton of St. Gallen and HSG pages. For each profile (EU/EFTA, UK, other countries, everyone) it lists what students must do, which documents they need, the deadline, the office and the exact source sentence. It ends with a link check and a list of what is still missing for a complete checklist. Use it as the source of truth for the rules the guide shows. Where it says "not in source", do not fill the gap from general knowledge.
+- [docs/rulebook-swiss-students-stgallen.md](docs/rulebook-swiss-students-stgallen.md): the same kind of rulebook for Swiss students moving to St. Gallen, built from official City of St. Gallen, Canton of St. Gallen, ch.ch and HSG pages. It covers three profiles (Swiss with main residence in St. Gallen, Swiss weekly residents, service-liable Swiss men) and four topics: registration with the city, health insurance, military/civil service and the exemption tax, and integration resources. Each row quotes the source sentence in its original language. It ends with a list of what is still missing for a complete checklist. Use it as the source of truth for Swiss students, with the same "not in source" rule as above.
 
 ## Everything runs in Docker
 
