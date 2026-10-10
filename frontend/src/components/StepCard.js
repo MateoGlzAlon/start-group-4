@@ -4,12 +4,16 @@ import styles from "./StepCard.module.css";
 
 // One step of the checklist, built on the event card of docs/style.md: a grey card with a green
 // block on the left (the step number) and a green arrow square that opens the details.
+// On phones the "Mark as done" button lives in the Guide's dock (a bar at the bottom of the screen) instead.
 export default function StepCard({ step, number, done, open, onToggleOpen, onToggleDone }) {
   const detailsId = `step-${step.id}`;
   const classes = [styles.card, open && styles.open, done && styles.done].filter(Boolean).join(" ");
+  // Show the source with a quote first; fold the others away so the card stays short on a phone.
+  const primary = step.sources.find((source) => source.quote) ?? step.sources[0];
+  const more = step.sources.filter((source) => source !== primary);
 
   return (
-    <article className={classes}>
+    <article id={`card-${step.id}`} className={classes}>
       <h3 className={styles.heading}>
         <button type="button" className={styles.toggle} aria-expanded={open} aria-controls={detailsId} onClick={onToggleOpen}>
           <span className={styles.num}>
@@ -38,22 +42,19 @@ export default function StepCard({ step, number, done, open, onToggleOpen, onTog
         )}
         <List label="Good to know" items={step.notes} />
 
-        {step.missing.length > 0 && (
-          <div className={styles.gaps}>
-            <h4 className={styles.label}>Not in the official sources</h4>
-            <ul>
-              {step.missing.map((item) => (
-                <li key={item}>{item}</li>
+        <Section label="Official source">
+          <SourceQuote source={primary} />
+          {more.length > 0 && (
+            <details className={styles.more}>
+              <summary>
+                <East size={18} />
+                {more.length === 1 ? "1 more source" : `${more.length} more sources`}
+              </summary>
+              {more.map((source, i) => (
+                <SourceQuote key={i} source={source} />
               ))}
-            </ul>
-            <p>Ask the office before you go.</p>
-          </div>
-        )}
-
-        <Section label={step.sources.length > 1 ? "Sources" : "Source"}>
-          {step.sources.map((source, i) => (
-            <SourceQuote key={i} source={source} />
-          ))}
+            </details>
+          )}
         </Section>
 
         {!step.optional && (

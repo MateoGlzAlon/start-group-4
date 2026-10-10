@@ -33,9 +33,10 @@ export default function Questionnaire() {
 
   useEffect(() => setSavedQuery(loadProfileQuery()), []);
 
-  // Move focus to each new question, so keyboard and screen-reader users start there.
+  // Start each new question at the top of the screen, with focus on it for keyboard and screen-reader users.
   useEffect(() => {
-    if (index >= 0) headingRef.current?.focus();
+    window.scrollTo(0, 0);
+    if (index >= 0) headingRef.current?.focus({ preventScroll: true });
   }, [index]);
 
   // Which questions come next depends on the answers so far (Swiss students get their own).
@@ -86,14 +87,20 @@ export default function Questionnaire() {
 
   return (
     <div className={styles.question}>
+      <div className={styles.topRow}>
+        <button type="button" className="btn-link" onClick={() => setIndex(index - 1)}>
+          <West size={20} />
+          Back
+        </button>
+        <p className="meta">
+          Question {index + 1} of {questions.length}
+        </p>
+      </div>
       <div className={styles.progress} aria-hidden="true">
         {questions.map((q, i) => (
           <span key={q.key} className={i <= index ? styles.barOn : styles.bar} />
         ))}
       </div>
-      <p className="meta">
-        Question {index + 1} of {questions.length}
-      </p>
       <h1 ref={headingRef} tabIndex={-1} className={styles.heading}>
         {question}
       </h1>
@@ -116,11 +123,6 @@ export default function Questionnaire() {
           </li>
         ))}
       </ul>
-
-      <button type="button" className={`btn-link ${styles.back}`} onClick={() => setIndex(index - 1)}>
-        <West size={20} />
-        Back
-      </button>
     </div>
   );
 }

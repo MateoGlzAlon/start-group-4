@@ -9,17 +9,17 @@ It is a frontend-only prototype for Demo Day, built with Next.js and React. Ther
 You only need Docker with the Compose plugin, and `make`.
 
 ```sh
-make provision     # build and start; the app runs on http://localhost:8095
+make provision     # build and start; the app runs on http://localhost:3000
 make deprovision   # stop it
 make               # list all targets
 ```
 
-If port 8095 is taken: `make provision APP_PORT=9000`.
+If port 3000 is taken: `make provision APP_PORT=9000`.
 
 To work on the app with live reload:
 
 ```sh
-make dev           # Next.js dev server in Docker on http://localhost:3000
+make dev           # Next.js dev server in Docker on http://localhost:3001
 make test          # checks every step cites an official source
 ```
 
@@ -38,4 +38,4 @@ Every push to `main` builds the app and publishes it to GitHub Pages ([.github/w
 - [frontend/src/data/steps.js](frontend/src/data/steps.js): the checklist steps, each with the rulebook rows it covers, its source (with the verbatim quote where the rulebook gives one) and an English translation of German quotes.
 - [frontend/src/data/sources.js](frontend/src/data/sources.js): the source pages (S1–S8 for international students, CH-S1 to CH-S9 for Swiss students), with links to their English versions where they exist.
 
-When a rule changes, update the quote and the step together. If a source doesn't say something, the step lists it under "Not in the official sources" instead of filling the gap.
+When a rule changes, update the quote and the step together. If a source doesn't say something, leave the gap open (it is recorded in the step's `missing` list, which the app does not show) instead of filling it.

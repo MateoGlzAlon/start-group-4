@@ -7,8 +7,8 @@ SERVICES := frontend
 COMPOSE  := docker compose -f docker-compose.yml
 
 # Host ports, e.g. `make provision APP_PORT=9000`.
-APP_PORT ?= 8095
-DEV_PORT ?= 3000
+APP_PORT ?= 3000
+DEV_PORT ?= 3001
 export APP_PORT DEV_PORT
 
 .DEFAULT_GOAL := help
@@ -31,7 +31,7 @@ check: ## Verify prerequisites (Docker, the Compose plugin) are installed
 build: check ## Build the Docker image of every service (the frontend build runs its tests)
 	$(COMPOSE) build $(SERVICES)
 
-provision: check ## Build and start all services in Docker (detached); the app runs on http://localhost:8095 (APP_PORT=… to change)
+provision: check ## Build and start all services in Docker (detached); the app runs on http://localhost:3000 (APP_PORT=… to change)
 	$(COMPOSE) up -d --build $(SERVICES)
 	@echo "Arrive SG runs on http://localhost:$(APP_PORT)"
 
@@ -49,5 +49,5 @@ logs: ## Follow the logs of every service
 test: check ## Run the frontend tests in Docker (every step must cite an official source)
 	docker build --progress=plain --no-cache-filter test --target test frontend
 
-dev: check ## Run the frontend with live reload on http://localhost:3000 (DEV_PORT=… to change; Ctrl+C stops it)
+dev: check ## Run the frontend with live reload on http://localhost:3001 (DEV_PORT=… to change; Ctrl+C stops it)
 	$(COMPOSE) --profile dev up --build --renew-anon-volumes frontend-dev

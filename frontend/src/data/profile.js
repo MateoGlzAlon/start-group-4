@@ -125,13 +125,14 @@ export function allProfiles() {
 }
 
 // The rulebooks group people differently depending on the rule:
-// - permits, visas and canton changes: EU/EFTA, the UK, and "other countries";
+// - permits, visas and canton changes: EU/EFTA, the UK, and "other countries" (the UK guide has its own rules for the UK);
 // - the HSG exchange guide (S4): EU/EFTA; Australia, Japan, Malaysia, New Zealand, Singapore and the UK; everyone else;
 // - Swiss students: main residence or weekly resident, and whether they are liable for military service.
 export const isSwiss = (p) => p.nationality === "ch";
 export const isForeign = (p) => !isSwiss(p);
 export const isEu = (p) => p.nationality === "eu";
 export const isNonEu = (p) => isForeign(p) && !isEu(p);
+export const isUk = (p) => p.nationality === "uk";
 export const isOtherCountry = (p) => p.nationality === "apac" || p.nationality === "other";
 export const inExchangeUkGroup = (p) => p.nationality === "uk" || p.nationality === "apac";
 export const isDegree = (p) => p.programme === "degree";

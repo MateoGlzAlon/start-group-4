@@ -9,6 +9,14 @@ export const metadata = {
     "A step-by-step checklist for students moving to St.Gallen to study at HSG, based on the official City, Canton and HSG pages.",
 };
 
+// viewportFit "cover" lets the page use the full screen on notched phones; globals.css pads for the safe areas.
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#ffffff",
+};
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en">

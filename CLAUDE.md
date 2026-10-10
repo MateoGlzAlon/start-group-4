@@ -47,7 +47,7 @@ We are building a tool that gives international students at HSG (University of S
     - `when(profile)`: which profiles see the step;
     - the rows it covers: `rows` for docs/context_1.md (1–30) and `chRows` for the Swiss rulebook (A1–C21);
     - `sources`: each gives the place on the page (`where`), the exact `quote` where the rulebook quotes a sentence, or both. German quotes also get an English `translation`;
-    - `missing`: what the sources don't say.
+    - `missing`: what the sources don't say. It is a record for the team and is **not shown** in the app; do not add a "Not in the official sources" panel back.
 
     The Swiss rulebook's "Everyone" rows also apply to international students (the CHF 200 fine for late registration, "Tell others your new address"). Its appendix row I11 adds the city's exemption form to the international health-insurance step.
   - `sources.js`: the official pages, with English versions where they exist.
@@ -72,6 +72,13 @@ We are building a tool that gives international students at HSG (University of S
   - HSG green only for actions, links and progress.
   - Each step is shown as an HSG event card: a grey card, a green block with the step number, and a green arrow square.
   - Don't use the HSG logo or present the app as an official HSG page. The header says "Student prototype" and the footer says it isn't an official service.
+- **Phone first.** Most students will use the app on a phone. Design and check every change at 390 px and 320 px wide first, then on desktop.
+  - On phones, body text stays at 16 px and anything you tap is at least 48 px tall. This deliberately differs from docs/style.md, where the HSG site drops to 14 px.
+  - Below 600 px, a collapsed step card shows only its deadline and title. The summary appears when the card is open.
+  - Below 840 px, "Mark as done" is in the dock instead of the card. The dock is a bar fixed to the bottom of the screen, shown only while the open step is on screen. Opening a step scrolls it to the top of the screen.
+  - Pad fixed and edge-to-edge elements for the iPhone safe areas (`env(safe-area-inset-*)`).
+  - Put hover effects inside `@media (hover: hover)`, because on touch screens they stick after a tap. Give touch feedback with `:active` instead.
+  - In CSS Modules, wrap global classes (`.btn`, `.meta`, `.btn-link`) in `:global()`. Never reuse a class name for two different things in one module.
 - **Deploy:** [.github/workflows/deploy-pages.yml](.github/workflows/deploy-pages.yml) publishes the app to GitHub Pages on every push to `main`. It builds with `BASE_PATH=/<repository name>`. Link between pages with `next/link` or `useRouter`, which add the base path. Never hard-code internal URLs in an `<a>`.
 
 ## Everything runs in Docker
@@ -98,6 +105,6 @@ It has at least these targets:
 | `provision` | Start the whole system in Docker, detached (`docker compose up -d`) |
 | `deprovision` | Stop the system and remove its containers, volumes and orphans (`docker compose down -v --remove-orphans`) |
 
-It also has `status`, `logs`, `test` (runs the frontend tests in Docker) and `dev` (Next.js with live reload on port 3000, in Docker).
+It also has `status`, `logs`, `test` (runs the frontend tests in Docker) and `dev` (Next.js with live reload on port 3001, in Docker). The app itself (`make provision`) runs on http://localhost:3000.
 
 As the system grows, add more targets (tests, logs, …) under their own section. When a target is added or changed, update its `##` description in the same change.

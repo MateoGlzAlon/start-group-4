@@ -108,13 +108,95 @@
   color: var(--hsg-grey-600);
 }
 
+/* Dock: bottom bar with "Mark as done" for the open step: phones and small tablets only */
+.dock {
+  display: none;
+}
+
+@media (max-width: 839px) {
+  .dock {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 12px max(var(--gutter), env(safe-area-inset-right)) calc(12px + env(safe-area-inset-bottom))
+      max(var(--gutter), env(safe-area-inset-left));
+    background: var(--hsg-white);
+    border-top: 1px solid var(--hsg-grey-300);
+    transition: transform 0.35s ease-in-out;
+  }
+
+  .dockHidden {
+    transform: translateY(100%);
+  }
+
+  .dockInfo {
+    flex: none;
+    display: flex;
+    flex-direction: column;
+    white-space: nowrap;
+    font-family: var(--font-heading);
+    line-height: 1.3;
+  }
+
+  .dockStep {
+    font-weight: 500;
+  }
+
+  .dockCount {
+    font-size: 0.875rem;
+    color: var(--hsg-grey-600);
+  }
+
+  .dock :global(.btn) {
+    flex: 1 1 auto;
+    max-width: 240px;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  /* Room at the end of the page, so the bar never covers the last lines */
+  .sources {
+    padding-bottom: 72px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dock {
+    transition: none;
+  }
+}
+
 @media (max-width: 599px) {
+  .top h1 {
+    margin-bottom: 1rem;
+  }
+
   .profile {
     font-size: 1rem;
+    margin-bottom: 0;
   }
 
   .change {
     display: flex;
-    margin: 0.5rem 0 0;
+    margin: 0;
+  }
+
+  .progress {
+    margin-top: 1rem;
+    padding-top: 1rem;
+  }
+
+  .phaseIntro {
+    margin-bottom: 1rem;
+  }
+
+  .sourceList li {
+    gap: 0.5rem;
   }
 }

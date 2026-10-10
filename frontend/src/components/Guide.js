@@ -2,13 +2,13 @@
 
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { describeProfile, parseProfile, toQuery } from "@/data/profile";
 import { RULES_AS_OF, SOURCES } from "@/data/sources";
 import { PHASES, stepsFor } from "@/data/steps";
 import { loadDone, saveDone, saveProfileQuery } from "@/lib/storage";
-import { OpenInNew } from "./Icons";
+import { Check, OpenInNew } from "./Icons";
 import StepCard from "./StepCard";
 import styles from "./Guide.module.css";
 
@@ -23,6 +23,8 @@ export default function Guide() {
 
   const [done, setDone] = useState(() => new Set());
   const [openId, setOpenId] = useState(null);
+  const [dockVisible, setDockVisible] = useState(false);
+  const scrollToOpen = useRef(false); // set when the student opens a step, not when the page loads
 
   // Remember this checklist, restore ticked-off steps and open the first step still to do.
   useEffect(() => {
@@ -32,6 +34,34 @@ export default function Guide() {
     setDone(saved);
     setOpenId(firstOpenStep(steps, saved)?.id ?? null);
   }, [profile, steps]);
+
+  // Opening a step closes the one above it, which moves everything up. Bring the opened step to the top
+  // of the screen when it is no longer near the top, so the student does not lose their place.
+  useEffect(() => {
+    if (!scrollToOpen.current || !openId) return;
+    scrollToOpen.current = false;
+    const card = document.getElementById(`card-${openId}`);
+    const top = card?.getBoundingClientRect().top ?? 0;
+    if (top < 0 || top > window.innerHeight / 3) {
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      card.scrollIntoView({ block: "start", behavior: reduce ? "auto" : "smooth" });
+    }
+  }, [openId]);
+
+  // On phones the dock, a bar at the bottom of the screen, offers "Mark as done" for the open step.
+  // It shows only while that step is on screen.
+  useEffect(() => {
+    const card = openId && document.getElementById(`card-${openId}`);
+    if (!card || !("IntersectionObserver" in window)) {
+      setDockVisible(Boolean(card));
+      return;
+    }
+    const observer = new IntersectionObserver(([entry]) => setDockVisible(entry.isIntersecting), {
+      rootMargin: "0px 0px -96px 0px", // ignore the part of the screen behind the dock
+    });
+    observer.observe(card);
+    return () => observer.disconnect();
+  }, [openId]);
 
   if (!profile) {
     return (
@@ -53,14 +83,21 @@ export default function Guide() {
       next.add(id);
       // Step by step: close this one and open the next step still to do.
       const after = todo.slice(todo.findIndex((step) => step.id === id) + 1);
+      scrollToOpen.current = true;
       setOpenId(firstOpenStep(after, next)?.id ?? null);
     }
     setDone(next);
     saveDone(next);
   }
 
+  function toggleOpen(id) {
+    scrollToOpen.current = true;
+    setOpenId(openId === id ? null : id);
+  }
+
   const doneCount = todo.filter((step) => done.has(step.id)).length;
   const numbers = new Map(todo.map((step, i) => [step.id, i + 1]));
+  const openStep = todo.find((step) => step.id === openId); // optional steps have nothing to mark
   const usedSources = Object.keys(SOURCES).filter((id) =>
     steps.some((step) => step.sources.some((source) => source.id === id)),
   );
@@ -108,7 +145,7 @@ export default function Guide() {
                     number={numbers.get(step.id)}
                     done={done.has(step.id)}
                     open={openId === step.id}
-                    onToggleOpen={() => setOpenId(openId === step.id ? null : step.id)}
+                    onToggleOpen={() => toggleOpen(step.id)}
                     onToggleDone={() => toggleDone(step.id)}
                   />
                 </li>
@@ -121,8 +158,7 @@ export default function Guide() {
       <section className={styles.sources} aria-labelledby="sources">
         <h2 id="sources">Where these rules come from</h2>
         <p>
-          Every step is based on these official pages, as of {RULES_AS_OF}. Where a page does not say something, the
-          step lists it under “Not in the official sources” instead of guessing.
+          Every step is based on these official pages, as of {RULES_AS_OF}.
         </p>
         <ul className={styles.sourceList}>
           {usedSources.map((id) => {
@@ -145,6 +181,31 @@ export default function Guide() {
           })}
         </ul>
       </section>
+
+      {openStep && (
+        <div
+          className={dockVisible ? styles.dock : `${styles.dock} ${styles.dockHidden}`}
+          inert={!dockVisible}
+          aria-label="Current step"
+          role="region"
+        >
+          <div className={styles.dockInfo}>
+            <span className={styles.dockStep}>Step {numbers.get(openStep.id)}</span>
+            <span className={styles.dockCount}>
+              {doneCount} of {todo.length} done
+            </span>
+          </div>
+          <button
+            type="button"
+            className={done.has(openStep.id) ? "btn btn-outline" : "btn btn-primary"}
+            aria-pressed={done.has(openStep.id)}
+            onClick={() => toggleDone(openStep.id)}
+          >
+            {done.has(openStep.id) && <Check />}
+            {done.has(openStep.id) ? "Done" : "Mark as done"}
+          </button>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,5 +1,7 @@
 /* Tokens and base styles from docs/style.md (HSG website style): square corners, no shadows,
-   light Gill Sans headings, Palatino body text, HSG green for anything you can click. */
+   light Gill Sans headings, Palatino body text, HSG green for anything you can click.
+   Phone first: most students open this on a phone. Two deliberate differences from the HSG site on small
+   screens: body text stays at 16px (the site drops to 14px), and buttons are at least 48px tall. */
 
 :root {
   /* brand */
@@ -30,6 +32,7 @@
   --gutter: 24px;
   --gap: 56px;
   --gridgap: 12px;
+  --tap: 48px; /* minimum height of anything you tap */
 }
 
 *,
@@ -46,6 +49,7 @@ html {
 body {
   margin: 0;
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   font-family: var(--font-body);
@@ -108,13 +112,16 @@ a {
   text-decoration: none;
 }
 
-a:hover {
-  text-decoration: underline;
+a,
+button,
+summary {
+  -webkit-tap-highlight-color: transparent;
 }
 
 button {
   font: inherit;
   color: inherit;
+  touch-action: manipulation;
 }
 
 :focus {
@@ -131,7 +138,8 @@ button {
   width: 100%;
   max-width: var(--content-max);
   margin: 0 auto;
-  padding: 0 var(--gutter);
+  padding-left: max(var(--gutter), env(safe-area-inset-left));
+  padding-right: max(var(--gutter), env(safe-area-inset-right));
 }
 
 .main {
@@ -177,7 +185,9 @@ button {
 .btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.75rem;
+  min-height: var(--tap);
   font-family: var(--font-heading);
   font-weight: 500;
   font-size: 1.25rem;
@@ -192,28 +202,24 @@ button {
     color var(--ease);
 }
 
-.btn:hover {
-  text-decoration: none;
-}
-
 .btn-primary {
   background: var(--hsg-green);
   border-color: var(--hsg-green);
   color: var(--hsg-white);
 }
 
-.btn-primary:hover {
+.btn-primary:active {
   background: var(--hsg-green-hover);
   border-color: var(--hsg-green-hover-border);
 }
 
 .btn-outline {
-  background: transparent;
+  background: var(--hsg-white);
   border-color: var(--hsg-green);
   color: var(--hsg-green);
 }
 
-.btn-outline:hover {
+.btn-outline:active {
   background: var(--hsg-green);
   color: var(--hsg-white);
 }
@@ -222,6 +228,7 @@ button {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
+  min-height: 44px;
   padding: 0;
   border: 0;
   background: none;
@@ -232,8 +239,26 @@ button {
   cursor: pointer;
 }
 
-.btn-link:hover {
-  text-decoration: underline;
+/* Hover effects only where there is a real pointer; on touch screens they would stick after a tap. */
+@media (hover: hover) {
+  a:hover,
+  .btn-link:hover {
+    text-decoration: underline;
+  }
+
+  .btn:hover {
+    text-decoration: none;
+  }
+
+  .btn-primary:hover {
+    background: var(--hsg-green-hover);
+    border-color: var(--hsg-green-hover-border);
+  }
+
+  .btn-outline:hover {
+    background: var(--hsg-green);
+    color: var(--hsg-white);
+  }
 }
 
 /* Type scale and spacing from docs/style.md §4–5 */
@@ -241,10 +266,6 @@ button {
 @media (max-width: 839px) {
   :root {
     --gap: 48px;
-  }
-
-  body {
-    font-size: 0.875rem;
   }
 
   h1 {
@@ -268,7 +289,7 @@ button {
   }
 
   .btn {
-    font-size: 0.875rem;
+    font-size: 1rem;
     padding: 12px 24px;
   }
 }

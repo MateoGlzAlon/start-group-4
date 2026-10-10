@@ -3,6 +3,7 @@
   --arrow-size: 48px;
   --pad: 20px;
   background: var(--hsg-grey-100);
+  scroll-margin-top: 12px;
 }
 
 .heading {
@@ -106,9 +107,17 @@
 }
 
 /* Hover state of the HSG event card: the green parts turn dark grey */
-.toggle:hover .arrow,
-.card:not(.done) .toggle:hover .num {
-  background: var(--hsg-grey-600);
+@media (hover: hover) {
+  .toggle:hover .arrow,
+  .card:not(.done) .toggle:hover .num {
+    background: var(--hsg-grey-600);
+  }
+}
+
+/* Feedback while a finger is on the card */
+.toggle:active .arrow,
+.card:not(.done) .toggle:active .num {
+  background: var(--hsg-green-hover);
 }
 
 /* Details */
@@ -140,22 +149,6 @@
   padding-left: 0;
 }
 
-.gaps {
-  margin-top: 1.5rem;
-  padding: 16px 20px;
-  background: var(--hsg-beige);
-}
-
-.gaps ul {
-  margin-bottom: 0.5rem;
-}
-
-.gaps p {
-  margin: 0;
-  font-family: var(--font-heading);
-  font-size: 0.875rem;
-}
-
 .source {
   margin: 0 0 1rem;
 }
@@ -169,6 +162,8 @@
   padding-left: 1rem;
   border-left: 2px solid var(--hsg-green);
   font-style: italic;
+  hyphens: auto; /* long German words on narrow screens */
+  overflow-wrap: break-word;
 }
 
 .translation {
@@ -201,6 +196,38 @@
   vertical-align: -2px;
 }
 
+.more {
+  margin-top: 0.5rem;
+}
+
+.more summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  list-style: none;
+  cursor: pointer;
+  font-family: var(--font-heading);
+  font-weight: 500;
+  color: var(--hsg-green);
+}
+
+.more summary::-webkit-details-marker {
+  display: none;
+}
+
+.more summary svg {
+  transition: transform var(--ease);
+}
+
+.more[open] summary svg {
+  transform: rotate(90deg);
+}
+
+.more[open] summary {
+  margin-bottom: 0.75rem;
+}
+
 .notice {
   margin: 0.5rem 0 0;
   padding: 10px 14px;
@@ -214,11 +241,31 @@
   margin-top: 2rem;
 }
 
+/* Phones and small tablets: the Guide's dock has the "Mark as done" button */
+@media (max-width: 839px) {
+  .actions {
+    display: none;
+  }
+
+  .details {
+    padding-bottom: 20px;
+  }
+}
+
 @media (max-width: 599px) {
   .card {
-    --num-width: 48px;
+    --num-width: 44px;
     --arrow-size: 40px;
     --pad: 14px;
+  }
+
+  /* Collapsed cards show only the deadline and the title, so the list is quick to scan */
+  .card:not(.open) .summary {
+    display: none;
+  }
+
+  .card:not(.open) .title {
+    margin-bottom: 0;
   }
 
   .num {

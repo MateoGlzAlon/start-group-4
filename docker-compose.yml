@@ -6,7 +6,7 @@ services:
     build: ./frontend
     image: arrive-sg-frontend
     ports:
-      - "${APP_PORT:-8095}:80"
+      - "${APP_PORT:-3000}:80"
     restart: unless-stopped
 
   # Live-reload server for development: `make dev`.
@@ -17,7 +17,7 @@ services:
       target: deps
     command: npm run dev -- --hostname 0.0.0.0
     ports:
-      - "${DEV_PORT:-3000}:3000"
+      - "${DEV_PORT:-3001}:3000"
     volumes:
       - ./frontend:/app
       - /app/node_modules
