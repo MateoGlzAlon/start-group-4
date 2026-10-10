@@ -111,12 +111,12 @@ export default function Guide() {
       <section className={styles.top}>
         <p className="meta">Your checklist</p>
         <h1>Your move to St.Gallen</h1>
-        <p className={styles.profile}>
-          {describeProfile(profile).join(" · ")}
-          <Link href="/" className={`btn-link ${styles.change} no-print`}>
-            Change answers
-          </Link>
-        </p>
+        {/* The answers this checklist is built from. They are changed with "Customise profile" in the header. */}
+        <ul className={styles.profile} aria-label="Your profile">
+          {describeProfile(profile).map((answer) => (
+            <li key={answer}>{answer}</li>
+          ))}
+        </ul>
 
         <div className={styles.progress}>
           <p className={styles.progressText} aria-live="polite">

@@ -2,15 +2,24 @@
   margin-bottom: var(--gap);
 }
 
+/* Profile answers as square tags */
 .profile {
-  font-family: var(--font-heading);
-  font-size: 1.125rem;
-  line-height: 1.5;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-.change {
-  margin-left: 1rem;
-  vertical-align: 1px;
+.profile li {
+  margin: 0;
+  padding: 6px 12px;
+  background: var(--hsg-grey-100);
+  border-left: 3px solid var(--hsg-green);
+  font-family: var(--font-heading);
+  font-size: 0.9375rem;
+  line-height: 1.4;
 }
 
 .progress {
@@ -178,13 +187,12 @@
   }
 
   .profile {
-    font-size: 1rem;
-    margin-bottom: 0;
+    gap: 6px;
   }
 
-  .change {
-    display: flex;
-    margin: 0;
+  .profile li {
+    padding: 5px 10px;
+    font-size: 0.875rem;
   }
 
   .progress {

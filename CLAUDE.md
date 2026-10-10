@@ -41,6 +41,8 @@ We are building a tool that gives international students at HSG (University of S
 - **Pages:**
   - `/` shows the intro, then one question per screen. Everyone answers nationality, then programme (Bachelor's, Master's, PhD or other degree; exchange is offered to international students only, since no rulebook covers Swiss exchange students). International students then answer where they move from, and work. `isDegree` covers the three degree answers; steps that differ by level use `isBachelor` and `isMaster`. The value `degree` (PhD or other) is kept so old checklist links still open. Swiss students answer main residence and military service instead. Steps that aren't about permits or nationality (applying, budget, housing, everyday rules, …) are shared by everyone; tailor them with `when` items (for example Swiss vs foreign tuition) rather than writing a Swiss copy.
   - `/guide/?nationality=…&…` is the checklist, grouped into phases ("Before you arrive", "Your first 14 days", …).
+  - `/profile/` ("Customise profile" in the header, the only way to change answers) opens the questions at the first one, with the saved answers selected.
+  - The checklist shows the answers as square tags at the top, with no edit link of its own.
   - The answers live in the URL. Ticked-off steps live in the browser's `localStorage` (see `src/lib/storage.js`).
 - **Code layout:** pages in `src/app/`, client components in `src/components/`, each with a CSS Module next to it. Design tokens and base styles are in `src/app/globals.css`. Do not add a CSS framework or UI library.
 - **Data** in `src/data/`:
@@ -83,7 +85,7 @@ We are building a tool that gives international students at HSG (University of S
   - Light Gill Sans headings and Palatino body text.
   - HSG green only for actions, links and progress.
   - Each step is shown as an HSG event card: a grey card, a green block with the step number, and a green arrow square.
-  - Don't use the HSG logo or present the app as an official HSG page. The header says "Student prototype" and the footer says it isn't an official service.
+  - Don't use the HSG logo or present the app as an official HSG page. The footer says it is a student prototype and not an official service.
 - **Phone first.** Most students will use the app on a phone. Design and check every change at 390 px and 320 px wide first, then on desktop.
   - On phones, body text stays at 16 px and anything you tap is at least 48 px tall. This deliberately differs from docs/style.md, where the HSG site drops to 14 px.
   - Below 600 px, a collapsed step card shows only its deadline and title. The summary appears when the card is open.

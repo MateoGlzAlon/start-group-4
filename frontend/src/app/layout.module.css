@@ -35,10 +35,8 @@
   background: var(--hsg-green);
 }
 
-.badge {
-  font-family: var(--font-heading);
-  font-size: 0.875rem;
-  color: var(--hsg-grey-600);
+.customise {
+  font-size: 0.9375rem;
 }
 
 .footer {

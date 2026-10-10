@@ -24,14 +24,25 @@ const HOW_IT_WORKS = [
   },
 ];
 
-export default function Questionnaire() {
+// `editing` (the /profile/ page) skips the intro and starts at the first question, with the saved answers selected.
+export default function Questionnaire({ editing = false }) {
   const router = useRouter();
-  const [index, setIndex] = useState(-1); // -1 is the intro, 0… the questions
+  const [index, setIndex] = useState(editing ? 0 : -1); // -1 is the intro, 0… the questions
   const [answers, setAnswers] = useState({});
   const [savedQuery, setSavedQuery] = useState(null);
   const headingRef = useRef(null);
 
-  useEffect(() => setSavedQuery(loadProfileQuery()), []);
+  useEffect(() => {
+    const saved = loadProfileQuery();
+    setSavedQuery(saved);
+    if (editing && saved) setAnswers(Object.fromEntries(new URLSearchParams(saved)));
+  }, [editing]);
+
+  function back() {
+    // From the first question, someone customising their profile goes back to their checklist.
+    if (index === 0 && editing) router.push(savedQuery ? `/guide/?${savedQuery}` : "/");
+    else setIndex(index - 1);
+  }
 
   // Start each new question at the top of the screen, with focus on it for keyboard and screen-reader users.
   useEffect(() => {
@@ -89,7 +100,7 @@ export default function Questionnaire() {
   return (
     <div className={styles.question}>
       <div className={styles.topRow}>
-        <button type="button" className="btn-link" onClick={() => setIndex(index - 1)}>
+        <button type="button" className="btn-link" onClick={back}>
           <West size={20} />
           Back
         </button>
