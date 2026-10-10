@@ -27,7 +27,7 @@ export default function RootLayout({ children }) {
               <span className={styles.mark} aria-hidden="true" />
               Arrive SG
             </Link>
-            <Link href="/profile/" className={`btn-link ${styles.customise}`}>
+            <Link href="/profile/" className={`btn btn-outline ${styles.customise}`}>
               Customise profile
             </Link>
           </div>

@@ -35,8 +35,11 @@
   background: var(--hsg-green);
 }
 
-.customise {
-  font-size: 0.9375rem;
+/* HSG outline button, sized for the header (the extra class beats the global .btn sizes) */
+.headerInner .customise {
+  min-height: 44px;
+  padding: 8px 20px;
+  font-size: 1rem;
 }
 
 .footer {
@@ -63,6 +66,12 @@
   .mark {
     width: 12px;
     height: 12px;
+  }
+
+  .headerInner .customise {
+    min-height: 40px;
+    padding: 6px 14px;
+    font-size: 0.875rem;
   }
 
   .footer {
